@@ -1,6 +1,8 @@
 package com.hotel.room.entity;
 
+import com.hotel.enums.RoomType;
+
 public interface Price {
     double getPrice();
-    String getRoomType();
+    RoomType getRoomType();
 }

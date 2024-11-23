@@ -1,5 +1,6 @@
 package com.hotel.user.entity;
 
+import com.hotel.booking.entity.Booking;
 import jakarta.persistence.Entity;
 import com.hotel.enums.CustomerType;
 

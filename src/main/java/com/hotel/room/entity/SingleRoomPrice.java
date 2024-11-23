@@ -1,5 +1,15 @@
 package com.hotel.room.entity;
 
-public class SingleRoomPrice {
+import com.hotel.enums.RoomType;
 
+public class SingleRoomPrice implements Price {
+    @Override
+    public double getPrice() {
+        return 100.0;
+    }
+
+    @Override
+    public RoomType getRoomType() {
+        return RoomType.SINGLE;
+    }
 }
