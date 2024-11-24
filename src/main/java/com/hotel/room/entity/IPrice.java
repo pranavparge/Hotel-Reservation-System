@@ -2,7 +2,7 @@ package com.hotel.room.entity;
 
 import com.hotel.enums.RoomType;
 
-public interface Price {
+public interface IPrice {
     double getPrice();
     RoomType getRoomType();
 }

@@ -1,15 +1,11 @@
 package com.hotel.room.entity;
 
 import com.hotel.enums.RoomType;
+import jakarta.persistence.Embeddable;
 
-public class SingleRoomPrice implements Price {
-    @Override
-    public double getPrice() {
-        return 100.0;
-    }
-
-    @Override
-    public RoomType getRoomType() {
-        return RoomType.SINGLE;
+@Embeddable
+public class SingleRoomPrice extends Price {
+    public SingleRoomPrice() {
+        super(100.0, RoomType.SINGLE);
     }
 }

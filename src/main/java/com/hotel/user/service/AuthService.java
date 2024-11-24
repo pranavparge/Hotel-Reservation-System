@@ -1,11 +1,13 @@
-package com.hotel.user.service.auth;
+package com.hotel.user.service;
 
 import lombok.RequiredArgsConstructor;
+
 import com.hotel.user.entity.Staff;
-import com.hotel.user.entity.Customer;
-import org.springframework.stereotype.Service;
 import com.hotel.enums.CustomerType;
+import com.hotel.user.entity.Customer;
+
 import jakarta.persistence.EntityExistsException;
+
 import com.hotel.user.entity.CustomerFactory;
 import com.hotel.repository.StaffRepository;
 import com.hotel.repository.CustomerRepository;
@@ -13,11 +15,13 @@ import com.hotel.dto.request.StaffSignUpRequest;
 import com.hotel.dto.response.StaffSignUpResponse;
 import com.hotel.dto.request.CustomerSignUpRequest;
 import com.hotel.dto.response.CustomerSignUpResponse;
+
+import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+public class AuthService implements IAuthService {
     private final CustomerRepository customerRepository;
     private final StaffRepository staffRepository;
 
