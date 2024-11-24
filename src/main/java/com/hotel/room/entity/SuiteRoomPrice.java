@@ -4,8 +4,8 @@ import com.hotel.enums.RoomType;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public class SingleRoomPrice extends Price {
-    public SingleRoomPrice() {
-        super(100.0, RoomType.SINGLE);
+public class SuiteRoomPrice extends Price {
+    public SuiteRoomPrice() {
+        super(200.0, RoomType.SUITE);
     }
 }

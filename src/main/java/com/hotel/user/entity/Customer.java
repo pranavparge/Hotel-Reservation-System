@@ -1,8 +1,10 @@
 package com.hotel.user.entity;
 
-import lombok.Data;
 import jakarta.persistence.*;
+
+import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 import com.hotel.enums.CustomerType;
 import com.hotel.booking.entity.Booking;
 import com.hotel.dto.response.CustomerSignUpResponse;
