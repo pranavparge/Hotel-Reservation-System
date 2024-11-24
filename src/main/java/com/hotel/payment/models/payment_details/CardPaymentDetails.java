@@ -24,8 +24,8 @@ public class CardPaymentDetails implements PaymentDetails {
     }
 
     @Override
-    public PaymentModel createPaymentModel(double amount, String bookingID){
-        return new CardPaymentModel(amount, bookingID, this.cardNumber);
+    public PaymentModel createPaymentModel(double amount, String bookingID, String customerEmail){
+        return new CardPaymentModel(amount, bookingID, customerEmail, this.cardNumber);
     }
 
     public void findCardServiceProvider(){

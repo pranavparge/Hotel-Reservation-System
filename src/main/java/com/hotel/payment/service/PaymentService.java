@@ -5,6 +5,6 @@ import com.hotel.dto.request.RefundPaymentRequest;
 import com.hotel.dto.response.PaymentResponse;
 
 public interface PaymentService {
-    PaymentResponse processPayment(PaymentRequest request);
-    PaymentResponse refundPayment(RefundPaymentRequest request);
+    void processPayment(PaymentRequest request);
+    void refundPayment(RefundPaymentRequest request);
 }

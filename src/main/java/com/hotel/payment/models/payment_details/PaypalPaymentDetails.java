@@ -13,8 +13,8 @@ public class PaypalPaymentDetails implements PaymentDetails{
     }
 
     @Override
-    public PaymentModel createPaymentModel(double amount, String bookingID){
-        return new PaypalPaymentModel(amount, bookingID, this.paypalID);
+    public PaymentModel createPaymentModel(double amount, String bookingID, String customerEmail){
+        return new PaypalPaymentModel(amount, bookingID, customerEmail, this.paypalID);
     }
 
     @Override

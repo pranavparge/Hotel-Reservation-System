@@ -7,7 +7,7 @@ import com.hotel.payment.models.PaypalPaymentModel;
 import com.hotel.payment.models.payment_details.PaymentDetails;
 
 public class PaymentFactory {
-    public static PaymentModel createPayment(double amount, String bookingID, PaymentDetails details){
-        return details.createPaymentModel(amount, bookingID);
+    public PaymentModel createPayment(double amount, String bookingID, String customerEmail, PaymentDetails details){
+        return details.createPaymentModel(amount, bookingID, customerEmail);
     }
 }

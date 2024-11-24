@@ -18,14 +18,25 @@ public abstract class PaymentModel {
 
     public String bookingID;
     public double amount;
-    public PaymentStatus paymentStatus;
+    public String customerEmail;
 
-    public PaymentModel(String bookingID, double amount){
+    public PaymentModel(String bookingID, double amount, String customerEmail){
         this.bookingID = bookingID;
         this.amount = amount;
+        this.customerEmail = customerEmail;
     }
 
-    public abstract PaymentResponse processPayment();
+    public abstract boolean processPayment();
+    
+    public String getBookingID(){
+        return this.bookingID;
+    }
+    public Double getAmount(){
+        return this.amount;
+    }
+    public String getcustomerEmail(){
+        return this.customerEmail;
+    }
 }
 
 

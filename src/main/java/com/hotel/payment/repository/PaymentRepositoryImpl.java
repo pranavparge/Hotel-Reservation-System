@@ -5,29 +5,24 @@ import java.util.concurrent.ExecutionException;
 import com.hotel.dto.response.PaymentResponse;
 import com.hotel.payment.models.CardPaymentModel;
 import com.hotel.payment.models.PaymentModel;
+import com.hotel.payment.models.PaypalPaymentModel;
 
 public class PaymentRepositoryImpl implements PaymentRepository {
 
     @Override
-    public boolean processCardPayment(double amount, String cardNumber) {
+    public PaymentResponse savePayment(PaymentModel paymentModel) {
         try {
             System.out.println("Process card payment here");
-            return true;
+            final boolean result = paymentModel.processPayment();
+            PaymentResponse response = new PaymentResponse("1", paymentModel.getBookingID(), paymentModel.getAmount(), paymentModel.getcustomerEmail(), result);
+            return response;
         } catch (Exception e) {
            throw new org.hibernate.sql.exec.ExecutionException(e.toString());
         }
        
     }
 
-    @Override
-    public boolean processPaypalPayment(double amount, String paypalid) {
-        try {
-            System.out.println("Process paypal payment here");
-            return true;
-        } catch (Exception e) {
-           throw new org.hibernate.sql.exec.ExecutionException(e.toString());
-        }
-    }
+   
 
     @Override
     public void processRefund() {

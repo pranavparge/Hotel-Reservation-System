@@ -7,9 +7,18 @@ import com.hotel.payment.models.payment_details.CardPaymentDetails;
 import com.hotel.payment.models.payment_details.PaymentDetails;
 import com.hotel.payment.models.payment_details.PaypalPaymentDetails;
 
+/// Example request packet
+// {
+//     "bookingID":,
+//     "customerEmail":
+//     "amount":,
+//     "paymentMethod",
+//     "details": {},
+// }
 
 public class PaymentRequest {
     private String bookingID;
+    private String customerEmail;
     private double amount;
     private PaymentMethod paymentMethod;
     private PaymentDetails paymentDetails;
@@ -38,6 +47,7 @@ public class PaymentRequest {
     @SuppressWarnings("unchecked")
     public PaymentRequest(Map<String, Object> data){
         this.bookingID = data.get("bookingID").toString();
+        this.customerEmail = data.get("customerEmail").toString();
         this.amount = Double.parseDouble(data.get("amount").toString());
         this.paymentMethod = setPaymentMethod(data.get("paymentMethod").toString());
         this.paymentDetails = setPaymentDetails((Map<String, Object>) data.get("details") , this.paymentMethod);
@@ -53,6 +63,10 @@ public class PaymentRequest {
 
     public PaymentDetails getPaymentDetails(){
         return this.paymentDetails;
+    }
+
+    public String getEmail(){
+        return this.customerEmail;
     }
 }
 
