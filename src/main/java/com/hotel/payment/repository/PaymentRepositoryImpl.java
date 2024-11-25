@@ -2,11 +2,14 @@ package com.hotel.payment.repository;
 
 import java.util.concurrent.ExecutionException;
 
+import org.springframework.stereotype.Repository;
+
 import com.hotel.dto.response.PaymentResponse;
 import com.hotel.payment.models.CardPaymentModel;
 import com.hotel.payment.models.PaymentModel;
 import com.hotel.payment.models.PaypalPaymentModel;
 
+@Repository
 public class PaymentRepositoryImpl implements PaymentRepository {
 
     @Override
@@ -23,7 +26,6 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     }
 
    
-
     @Override
     public void processRefund() {
         System.out.println("Process refunds here");

@@ -3,9 +3,12 @@ package com.hotel.payment.email_service.subjects;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.hotel.payment.email_service.observers.Observer;
 import com.hotel.payment.models.PaymentModel;
 
+@Component
 public class PaymentNotifier implements Subjects {
     private final List<Observer> observers = new ArrayList<>();
 

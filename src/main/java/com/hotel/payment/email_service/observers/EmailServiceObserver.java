@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import com.hotel.payment.models.PaymentModel;
 
+@Component
 public class EmailServiceObserver implements Observer{
 
     @Override

@@ -1,6 +1,7 @@
 package com.hotel.payment.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.hotel.dto.request.PaymentRequest;
 import com.hotel.dto.request.RefundPaymentRequest;
@@ -11,6 +12,7 @@ import com.hotel.payment.factory.PaymentFactory;
 import com.hotel.payment.models.PaymentModel;
 import com.hotel.payment.repository.PaymentRepositoryImpl;
 
+@Service
 public class PaymentServiceImpl implements PaymentService{
     final PaymentRepositoryImpl paymentRepository = new PaymentRepositoryImpl();
 
