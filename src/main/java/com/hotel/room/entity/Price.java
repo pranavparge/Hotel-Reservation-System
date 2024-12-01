@@ -6,6 +6,7 @@ import com.hotel.enums.RoomType;
 @Embeddable
 public class Price implements IPrice {
     private double price;
+    @Enumerated(EnumType.STRING)
     private RoomType roomType;
 
     public Price() {}

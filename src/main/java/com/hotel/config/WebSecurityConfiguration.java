@@ -1,7 +1,5 @@
 package com.hotel.config;
 
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.SecurityFilterChain;
@@ -11,12 +9,11 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request.requestMatchers("/auth/**", "/rooms/**")
+                .authorizeHttpRequests(request -> request.requestMatchers("/auth/**", "/rooms/**", "/bookings/**")
                         .permitAll());
         return http.build();
     }

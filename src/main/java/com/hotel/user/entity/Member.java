@@ -1,20 +1,14 @@
 package com.hotel.user.entity;
 
-import jakarta.persistence.Entity;
+import com.hotel.enums.ProgramType;
 
-import com.hotel.enums.CustomerType;
-import com.hotel.booking.entity.Booking;
-
-@Entity
-public class Member extends Customer {
-    public Member(String name, String email, String password) {
-        super(CustomerType.MEMBER, name, email, password);
+public class Member extends Program {
+    public Member() {
+        super(ProgramType.MEMBER);
     }
 
-    public Member() {}
-
     @Override
-    public Booking createBooking() {
-        return null;
+    public String getProgramBenefits() {
+        return "Access to member benefits and discounts.";
     }
 }

@@ -1,6 +1,6 @@
 package com.hotel.enums;
 
-public enum CustomerType {
+public enum ProgramType {
     MEMBER,
     LOYALTY
 }

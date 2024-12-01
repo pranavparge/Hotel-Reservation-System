@@ -1,20 +1,14 @@
 package com.hotel.user.entity;
 
-import jakarta.persistence.Entity;
+import com.hotel.enums.ProgramType;
 
-import com.hotel.enums.CustomerType;
-import com.hotel.booking.entity.Booking;
-
-@Entity
-public class Loyalty extends Customer {
-    public Loyalty(String name, String email, String password) {
-        super(CustomerType.LOYALTY, name, email, password);
+public class Loyalty extends Program {
+    public Loyalty() {
+        super(ProgramType.LOYALTY);
     }
 
-    public Loyalty() {}
-
     @Override
-    public Booking createBooking() {
-        return null;
+    public String getProgramBenefits() {
+        return "Earn and redeem loyalty points";
     }
 }

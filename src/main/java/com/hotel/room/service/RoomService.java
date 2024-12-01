@@ -47,5 +47,3 @@ public class RoomService implements IRoomService {
         return newRoom.getRoomResponse();
     }
 }
-
-

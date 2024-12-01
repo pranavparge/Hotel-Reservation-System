@@ -3,12 +3,11 @@ package com.hotel.user.service;
 import lombok.RequiredArgsConstructor;
 
 import com.hotel.user.entity.Staff;
-import com.hotel.enums.CustomerType;
+import com.hotel.enums.ProgramType;
 import com.hotel.user.entity.Customer;
 
 import jakarta.persistence.EntityExistsException;
 
-import com.hotel.user.entity.CustomerFactory;
 import com.hotel.repository.StaffRepository;
 import com.hotel.repository.CustomerRepository;
 import com.hotel.dto.request.StaffSignUpRequest;
@@ -45,8 +44,8 @@ public class AuthService implements IAuthService {
         if(customerRepository.findFirstByEmail(request.getEmail()).isPresent()) {
             throw new EntityExistsException("Customer Already Exists With Given Email " + request.getEmail());
         }
-        Customer customer = CustomerFactory.createCustomer(
-                CustomerType.valueOf(request.getCustomerType().toUpperCase()),
+        Customer customer = new Customer(
+                ProgramType.valueOf(request.getProgramType().toUpperCase()),
                 request.getName(),
                 request.getEmail(),
                 new BCryptPasswordEncoder().encode(request.getPassword())
