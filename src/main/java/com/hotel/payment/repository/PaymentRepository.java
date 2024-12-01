@@ -12,6 +12,6 @@ import com.hotel.payment.models.PaypalPaymentModel;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<PaymentModel, Long>{
-    @Query("SELECT p FROM payment_model p WHERE p.bookingID = :bookingID")
+    @Query("SELECT p FROM PaymentModel p WHERE p.bookingID = :bookingID")
     PaymentModel findPaymentByBookingID(@Param("bookingID") String bookingID);
 }

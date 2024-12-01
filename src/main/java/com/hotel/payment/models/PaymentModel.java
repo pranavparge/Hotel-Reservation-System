@@ -52,7 +52,7 @@ public abstract class PaymentModel {
     public abstract void processPayment();
     public abstract boolean refundPayment();
 
-    public PaymentResponse paymentReponse() {
+    public PaymentResponse paymentResponse() {
         PaymentResponse response = new PaymentResponse(paymentID.toString(), bookingID, amount, true);
         return response;
     }

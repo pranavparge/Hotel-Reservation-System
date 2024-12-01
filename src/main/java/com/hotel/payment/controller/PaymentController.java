@@ -34,9 +34,8 @@ public class PaymentController {
     public ResponseEntity<?> processPayment(Map<String, Object> data) {
         try {
             PaymentRequest request = new PaymentRequest(data);
-            PaymentReponse response = paymentService.processPayment(request);
-            Object[] payload = {};
-            return new ResponseEntity<>(payload, HttpStatus.OK);
+            PaymentResponse response = paymentService.processPayment(request);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Customer not created!", HttpStatus.BAD_REQUEST);
         }
@@ -45,10 +44,9 @@ public class PaymentController {
     @PostMapping("/refund")
     public ResponseEntity<?> refundPayment(Map<String, Object> data) {
         try {
-            String paymentId = data.get("id").toString();
-            paymentService.refundPayment(paymentId);
-            Object[] payload = {};
-            return new ResponseEntity<>(payload, HttpStatus.OK);
+            String bookingid = data.get("id").toString();
+            PaymentResponse response = paymentService.refundPayment(bookingid);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Customer not created!", HttpStatus.BAD_REQUEST);
         }

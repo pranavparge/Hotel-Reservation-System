@@ -50,7 +50,7 @@ public class PaymentRequest {
         this.customerEmail = data.get("customerEmail").toString();
         this.amount = Double.parseDouble(data.get("amount").toString());
         this.paymentMethod = setPaymentMethod(data.get("paymentMethod").toString());
-        this.paymentDetails = setPaymentDetails((Map<String, Object>) data.get("details") , this.paymentMethod);
+        this.paymentDetails = setPaymentDetails((Map<String, Object>) data.get("details") , setPaymentMethod(data.get("paymentMethod").toString()));
     }
 
     public double getAmount(){

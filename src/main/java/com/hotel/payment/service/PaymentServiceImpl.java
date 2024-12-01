@@ -12,12 +12,13 @@ import com.hotel.payment.email_service.subjects.PaymentNotifier;
 import com.hotel.payment.factory.PaymentFactory;
 import com.hotel.payment.models.PaymentModel;
 import com.hotel.payment.repository.PaymentRepository;
-import com.hotel.payment.repository.PaymentRepositoryImpl;
+import org.springframework.transaction.annotation.Transactional;
+//import com.hotel.payment.repository.PaymentRepositoryImpl;
 
 @Service
 @Transactional
 public class PaymentServiceImpl implements PaymentService{
-    final PaymentRepository paymentRepository = new PaymentRepository();
+    PaymentRepository paymentRepository;
 
     @Autowired
     private PaymentNotifier paymentNotifier;
@@ -25,17 +26,20 @@ public class PaymentServiceImpl implements PaymentService{
     @Autowired
     private PaymentFactory paymentFactory;
 
+    final PaymentResponse paymentReponse = new PaymentResponse("", "", 0.0, false);
     @Override
     public PaymentResponse processPayment(PaymentRequest request) {
         try {
             final PaymentModel paymentModel = paymentFactory.createPayment(request.getAmount(), request.bookingID(), request.getEmail(), request.getPaymentDetails());
-            model.processPayment();
+            paymentModel.processPayment();
             PaymentModel model = paymentRepository.save(paymentModel);
-            model.notifyCustomer("Payment done successfully")
+            model.notifyCustomer(paymentNotifier,"Payment done successfully");
             return model.paymentResponse();
         } catch (Exception e) {
             System.out.println("Failed to process the payment");
         }
+
+        return paymentReponse;
     }
 
     @Override
@@ -46,9 +50,12 @@ public class PaymentServiceImpl implements PaymentService{
             if(result){
                 paymentRepository.delete(model);
             }
-            model.notifyCustomer("Payment refund done successfully");
+            model.notifyCustomer(paymentNotifier,"Payment refund done successfully");
+            return model.paymentResponse();
         } catch (Exception e) {
             System.out.println("Failed to refund the payment");
         }
+
+        return paymentReponse;
     }
 }
