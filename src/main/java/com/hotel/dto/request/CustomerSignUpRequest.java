@@ -18,6 +18,6 @@ public class CustomerSignUpRequest {
     @NotBlank(message = "Name is required")
     private String name;
 
-    @NotBlank(message = "Program Type is required")
-    private String programType;
+    @NotBlank(message = "Customer Type is required")
+    private String customerType;
 }
