@@ -31,8 +31,10 @@ public class JwtUtility {
                 .compact();
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(UserDetails userDetails, String role) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role);
+        return generateToken(claims, userDetails);
     }
 
     private Claims extractAllClaims(String token) {
@@ -46,6 +48,10 @@ public class JwtUtility {
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));
     }
 
     private Date extractExpiration(String token) {

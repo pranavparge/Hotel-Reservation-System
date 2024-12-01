@@ -1,9 +1,11 @@
 package com.hotel.user.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import com.hotel.dto.response.StaffSignUpResponse;
 
+@Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
 public class Staff extends User {

@@ -16,12 +16,11 @@ import com.hotel.dto.request.BookingCreateRequest;
 import com.hotel.dto.response.BookingCreateResponse;
 
 @RestController
-@RequestMapping("/bookings")
 @RequiredArgsConstructor
 public class BookingController {
     private final IBookingService bookingService;
 
-    @PostMapping("/create")
+    @PostMapping("/customer/bookings/create")
     public ResponseEntity<?> createBooking(@Valid @RequestBody BookingCreateRequest request) {
         try {
             BookingCreateResponse newBooking = bookingService.createBooking(request);

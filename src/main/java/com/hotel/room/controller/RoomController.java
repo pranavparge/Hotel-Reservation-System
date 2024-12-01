@@ -15,12 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/rooms")
 @RequiredArgsConstructor
 public class RoomController {
     private final IRoomService roomService;
 
-    @PostMapping("/create")
+    @PostMapping("/staff/rooms/create")
     public ResponseEntity<?> createRoom(@Valid @RequestBody RoomCreateRequest request) {
         try {
             RoomCreateResponse newRoom = roomService.createRoom(request);
@@ -32,7 +31,7 @@ public class RoomController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/customer/rooms")
     public ResponseEntity<?> viewRooms() {
         try {
             List<RoomCreateResponse> response = roomService.viewRooms();
