@@ -23,7 +23,7 @@ public class PaymentNotifier implements Subjects {
     }
 
     @Override
-    public void notifyObservers(PaymentModel paymentModel) {
+    public void notifyObservers(PaymentModel paymentModel, String message) {
        for (Observer observer : observers) {
             observer.update(paymentModel);;
        }

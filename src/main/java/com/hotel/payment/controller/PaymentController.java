@@ -34,7 +34,7 @@ public class PaymentController {
     public ResponseEntity<?> processPayment(Map<String, Object> data) {
         try {
             PaymentRequest request = new PaymentRequest(data);
-            paymentService.processPayment(request);
+            PaymentReponse response = paymentService.processPayment(request);
             Object[] payload = {};
             return new ResponseEntity<>(payload, HttpStatus.OK);
         } catch (Exception e) {
@@ -43,9 +43,10 @@ public class PaymentController {
     }
 
     @PostMapping("/refund")
-    public ResponseEntity<?> refundPayment(@Valid @RequestBody RefundPaymentRequest request) {
+    public ResponseEntity<?> refundPayment(Map<String, Object> data) {
         try {
-            paymentService.refundPayment(request);
+            String paymentId = data.get("id").toString();
+            paymentService.refundPayment(paymentId);
             Object[] payload = {};
             return new ResponseEntity<>(payload, HttpStatus.OK);
         } catch (Exception e) {

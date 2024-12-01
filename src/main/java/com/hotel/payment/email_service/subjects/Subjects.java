@@ -6,5 +6,5 @@ import com.hotel.payment.models.PaymentModel;
 public interface Subjects {
     void attach(Observer observer);
     void detach(Observer observer);
-    void notifyObservers(PaymentModel paymentModel);
+    void notifyObservers(PaymentModel paymentModel, String message);
 }
