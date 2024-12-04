@@ -1,19 +1,19 @@
 package com.hotel.booking.controller;
 
+import com.hotel.dto.request.BookingUpdateRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hotel.booking.service.IBookingService;
 import com.hotel.dto.request.BookingCreateRequest;
 import com.hotel.dto.response.BookingCreateResponse;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +29,49 @@ public class BookingController {
             return new ResponseEntity<>("Invalid booking request: " + illegalArgumentException.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>("Booking not created!", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/staff/bookings")
+    public ResponseEntity<?> viewBookings(@RequestParam(value = "bookingID", required = false) Long bookingID) {
+        try {
+            if (bookingID != null) {
+                BookingCreateResponse response = bookingService.viewBooking(bookingID);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                List<BookingCreateResponse> response = bookingService.viewBookings();
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            }
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>("Booking not found: " + e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Unable to fetch bookings!", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/staff/bookings/update")
+    public ResponseEntity<?> updateBooking(@RequestParam(value = "bookingID") Long bookingID, @Valid @RequestBody BookingUpdateRequest updatedRequest) {
+        try {
+            BookingCreateResponse updatedBooking = bookingService.updateBooking(bookingID, updatedRequest);
+            return new ResponseEntity<>(updatedBooking, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>("Invalid booking update request: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Unable to update booking!", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/staff/bookings/delete")
+    public ResponseEntity<?> deleteBooking(@RequestParam(value = "bookingID") Long bookingID) {
+        try {
+            boolean isDeleted = bookingService.deleteBooking(bookingID);
+            if (isDeleted) {
+                return new ResponseEntity<>("Booking deleted successfully", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Booking not found with ID: " + bookingID, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("Unable to delete booking!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

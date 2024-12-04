@@ -1,11 +1,13 @@
 package com.hotel.booking.entity;
 
+import com.hotel.dto.response.RoomCreateResponse;
 import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.*;
 
@@ -23,36 +25,51 @@ public class Booking implements AdditionalServicesComponent {
     @CreationTimestamp
     private Instant timeStamp;
     private Long customerID;
-    @OneToMany
-    private List<Room> totalRooms;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(
+            name = "booking_total_rooms",
+            joinColumns = @JoinColumn(name = "booking_booking_id", referencedColumnName = "bookingId"),
+            inverseJoinColumns = @JoinColumn(name = "total_rooms_room_number", referencedColumnName = "roomNumber", unique = false)
+    )
+    private List<Room> totalRooms = new ArrayList<>();
     private Date startDate;
     private Date endDate;
     private int totalNumberOfGuests;
-    // Here we look in totalRooms and calculate the price using roomPrice of Room object
-    private double basePrice;
-    // Here we look in customerID and check in Customer table the customerType
+    private double totalPrice;
     private double discount;
     @ElementCollection
     private List<String> additionalServices = new ArrayList<>();
 
-    // Here the base cost will be the price of all the rooms added
     @Override
     public double getCost() {
         return 0;
     }
+
     public void addService(String serviceName) {
         additionalServices.add(serviceName);
     }
+
     public BookingCreateResponse getBookingResponse() {
         BookingCreateResponse response = new BookingCreateResponse();
         response.setBookingID(bookingId);
         response.setCustomerID(customerID);
         response.setAdditionalServices(additionalServices);
-        response.setBasePrice(basePrice);
+        response.setTotalPrice(totalPrice);
         response.setStartDate(startDate);
         response.setEndDate(endDate);
         response.setTotalNumberOfGuests(totalNumberOfGuests);
         response.setTimeStamp(Date.from(timeStamp));
+        List<RoomCreateResponse> roomResponses = totalRooms.stream()
+                .map(room -> {
+                    RoomCreateResponse roomResponse = new RoomCreateResponse();
+                    roomResponse.setRoomNumber(room.getRoomNumber());
+                    roomResponse.setRoomCapacity(room.getRoomCapacity());
+                    roomResponse.setRoomType(room.getRoomType());
+                    roomResponse.setRoomPrice(room.getRoomPrice());
+                    return roomResponse;
+                })
+                .collect(Collectors.toList());
+        response.setTotalRooms(roomResponses);
         return response;
     }
 }

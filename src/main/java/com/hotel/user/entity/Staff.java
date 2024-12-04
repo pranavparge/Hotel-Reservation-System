@@ -1,8 +1,10 @@
 package com.hotel.user.entity;
 
-import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import jakarta.persistence.*;
+
 import com.hotel.dto.response.StaffSignUpResponse;
 
 @Data

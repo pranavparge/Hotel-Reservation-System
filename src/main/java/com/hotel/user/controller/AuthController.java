@@ -9,6 +9,7 @@ import com.hotel.repository.StaffRepository;
 import com.hotel.user.entity.Customer;
 import com.hotel.user.entity.Staff;
 import com.hotel.util.JwtUtility;
+import com.hotel.util.TokenBlacklist;
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
@@ -29,10 +30,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -45,6 +43,7 @@ public class AuthController {
     private final CustomerRepository customerRepository;
     private final StaffRepository staffRepository;
     private final JwtUtility jwtUtility;
+    private final TokenBlacklist tokenBlacklist;
 
     @PostMapping("/customer/sign-up")
     public ResponseEntity<?> signUpCustomer(@Valid @RequestBody CustomerSignUpRequest request) {
@@ -109,5 +108,25 @@ public class AuthController {
             staffSignInResponse.setEmail(optionalStaff.get().getEmail());
         }
         return staffSignInResponse;
+    }
+
+    @PostMapping("/staff/log-out")
+    public ResponseEntity<?> logoutStaff(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.badRequest().body("Invalid token format");
+        }
+        String token = authHeader.substring(7);
+        tokenBlacklist.add(token);
+        return ResponseEntity.ok("Logged out successfully");
+    }
+
+    @PostMapping("/customer/log-out")
+    public ResponseEntity<?> logoutCustomer(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.badRequest().body("Invalid token format");
+        }
+        String token = authHeader.substring(7);
+        tokenBlacklist.add(token);
+        return ResponseEntity.ok("Logged out successfully");
     }
 }

@@ -2,6 +2,7 @@ package com.hotel.config;
 
 import com.hotel.user.service.IAuthService;
 import com.hotel.util.JwtUtility;
+import com.hotel.util.TokenBlacklist;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,8 +22,10 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final JwtUtility jwtUtility;
     private final IAuthService authService;
+
+    private final JwtUtility jwtUtility;
+    private final TokenBlacklist tokenBlacklist;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -32,6 +35,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         final String jwt = authHeader.substring(7);
+        if (tokenBlacklist.isBlacklisted(jwt)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token is invalid. Please log in again.");
+            return;
+        }
         final String userEmail = jwtUtility.extractUsername(jwt);
         final String role = jwtUtility.extractRole(jwt);
         if (request.getRequestURI().startsWith("/customer") && !"CUSTOMER".equals(role) ||
@@ -42,6 +50,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         if(StringUtils.isNotEmpty(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = authService.userDetailsService().loadUserByUsername(userEmail);
+            if (!jwtUtility.isTokenValid(jwt, userDetails)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token has expired. Please log in again.");
+                return;
+            }
             if(jwtUtility.isTokenValid(jwt, userDetails)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

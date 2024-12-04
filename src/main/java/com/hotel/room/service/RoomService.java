@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 
 import com.hotel.room.entity.*;
-import com.hotel.enums.RoomStatus;
 import com.hotel.repository.RoomRepository;
 import com.hotel.dto.request.RoomCreateRequest;
 import com.hotel.dto.response.RoomCreateResponse;
@@ -40,8 +39,7 @@ public class RoomService implements IRoomService {
         Room room = new Room(
                 request.getRoomNumber(),
                 request.getRoomCapacity(),
-                price,
-                RoomStatus.valueOf(request.getRoomStatus().toUpperCase())
+                price
         );
         Room newRoom = roomRepository.save(room);
         return newRoom.getRoomResponse();
