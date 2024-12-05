@@ -4,11 +4,12 @@ import com.hotel.dto.request.BookingUpdateRequest;
 import com.hotel.enums.ProgramType;
 import com.hotel.enums.RoomType;
 import com.hotel.repository.RoomRepository;
-import com.hotel.room.entity.Room;
+import com.hotel.room.entity.*;
 import com.hotel.user.entity.Customer;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import com.hotel.booking.entity.*;
@@ -19,6 +20,7 @@ import com.hotel.repository.CustomerRepository;
 import com.hotel.dto.request.BookingCreateRequest;
 import com.hotel.dto.response.BookingCreateResponse;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -80,9 +82,37 @@ public class BookingService implements IBookingService {
                     "Room capacity: " + totalRoomCapacity + ", Guests: " + request.getTotalNumberOfGuests());
         }
 
-        double roomsPrice = allocatedRooms.stream()
-                .mapToDouble(Room::getRoomPrice)
-                .sum();
+//        double roomsPrice = allocatedRooms.stream()
+//                .mapToDouble(Room::getRoomPrice)
+//                .sum();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String startDate = dateFormat.format(request.getStartDate());
+
+        double roomPriceAvail = 0.0;
+
+        for (Map.Entry<RoomType, Integer> r:request.getRoomTypeToQuantity().entrySet()) {
+            System.out.println("Key: " + r.getKey() + ", Value: " + r.getValue());
+
+            Integer roomBooked = bookingRepository.getBookingList(startDate, r.getKey().name());
+            Integer roomTotal = roomRepository.getRoomByType(r.getKey().name());
+            Room visitor = new Room();
+            if(r.getKey().name().equals("SINGLE")){
+                Price singleRoomPrice = new SingleRoomPrice();
+                singleRoomPrice.accept(visitor, roomTotal, roomBooked );
+                roomPriceAvail = roomPriceAvail + (visitor.getFinalPrice() * r.getValue());
+            }
+            else if(r.getKey().name().equals("DOUBLE")){
+                Price doubleRoomPrice = new DoubleRoomPrice();
+                doubleRoomPrice.accept(visitor, roomTotal, roomBooked );
+                roomPriceAvail = roomPriceAvail + (visitor.getFinalPrice() * r.getValue());
+            }
+            else{
+                Price suiteRoomPrice = new SuiteRoomPrice();
+                suiteRoomPrice.accept(visitor, roomTotal, roomBooked);
+                roomPriceAvail = roomPriceAvail + (visitor.getFinalPrice() * r.getValue());
+            }
+        }
 
         Booking booking = new Booking();
         booking.setCustomerID(request.getCustomerID());
@@ -117,12 +147,12 @@ public class BookingService implements IBookingService {
             }
         }
 
-        double totalPrice = roomsPrice + decoratedBooking.getCost();
+        double totalPrice = roomPriceAvail + decoratedBooking.getCost();
 
         double discount = 0.0;
         if (customer.getProgramType().equals(ProgramType.MEMBER)) {
             discount = 0.10;
-            totalPrice = roomsPrice;
+            totalPrice = roomPriceAvail;
         } else if (customer.getProgramType().equals(ProgramType.LOYALTY)) {
             long bookingCount = bookingRepository.countByCustomerID(request.getCustomerID());
             if (bookingCount >= 10) {
@@ -248,6 +278,8 @@ public class BookingService implements IBookingService {
                 }
             }
 
+            System.out.println("ROOM PRICE "+roomsPrice);
+
             double totalPrice = roomsPrice;
             if (!customer.getProgramType().equals(ProgramType.MEMBER)) {
                 totalPrice += decoratedBooking.getCost();
@@ -289,5 +321,39 @@ public class BookingService implements IBookingService {
             bookingRepository.delete(booking);
             return true;
         }).orElse(false);
+    }
+
+    @Override
+    @Transactional
+    public String getRoomPrice(String startDate) {
+        Integer singleRoomBooked = bookingRepository.getBookingList(startDate, "SINGLE");
+        Integer doubleRoomBooked = bookingRepository.getBookingList(startDate, "DOUBLE");
+        Integer suiteRoomBooked = bookingRepository.getBookingList(startDate, "SUITE");
+
+        JSONObject jsonObject = new JSONObject();
+
+        Price singleRoom = new SingleRoomPrice();
+        Price doubleRoom = new DoubleRoomPrice();
+        Price suiteRoom = new SuiteRoomPrice();
+
+        double singlePrice = 0.0 , doublePrice = 0.0 , suitePrice = 0.0;
+
+        Integer roomSingle = roomRepository.getRoomByType("SINGLE");
+        Integer roomDouble = roomRepository.getRoomByType("DOUBLE");
+        Integer roomSuite = roomRepository.getRoomByType("SUITE");
+
+        Room visitor = new Room();
+        singleRoom.accept(visitor, roomSingle, singleRoomBooked );
+        singlePrice = visitor.getFinalPrice();
+        doubleRoom.accept(visitor, roomDouble, doubleRoomBooked);
+        doublePrice = visitor.getFinalPrice();
+        suiteRoom.accept(visitor, roomSuite, suiteRoomBooked);
+        suitePrice = visitor.getFinalPrice();
+
+        jsonObject.put("SINGLE",singlePrice);
+        jsonObject.put("DOUBLE",doublePrice);
+        jsonObject.put("SUITE",suitePrice);
+
+        return jsonObject.toString();
     }
 }

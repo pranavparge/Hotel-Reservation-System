@@ -40,4 +40,8 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             @Param("endDate") Date endDate,
             @Param("bookingId") Long bookingId
     );
+
+    @Query(value = "SELECT count(*)\n" +
+            "FROM hotel.room where room_type = ?",nativeQuery = true)
+    Integer getRoomByType(String roomType);
 }

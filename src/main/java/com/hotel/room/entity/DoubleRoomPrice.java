@@ -8,4 +8,9 @@ public class DoubleRoomPrice extends Price {
     public DoubleRoomPrice() {
         super(150.0, RoomType.DOUBLE);
     }
+
+    @Override
+    public void accept(RoomVisitor visitor, double totalRoom, Integer roomBooked) {
+        visitor.visit(this, totalRoom, roomBooked);
+    }
 }

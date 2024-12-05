@@ -12,4 +12,5 @@ public interface IBookingService {
     BookingCreateResponse viewBooking(Long bookingID);
     BookingCreateResponse updateBooking(Long bookingID, BookingUpdateRequest request);
     boolean deleteBooking(Long bookingId);
+    String getRoomPrice(String startDate);
 }

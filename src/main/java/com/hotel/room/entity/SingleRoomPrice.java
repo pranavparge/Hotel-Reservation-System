@@ -8,4 +8,10 @@ public class SingleRoomPrice extends Price {
     public SingleRoomPrice() {
         super(100.0, RoomType.SINGLE);
     }
+
+    @Override
+    public void accept(RoomVisitor visitor, double totalRoom, Integer roomBooked) {
+        visitor.visit(this, totalRoom, roomBooked);
+    }
+
 }

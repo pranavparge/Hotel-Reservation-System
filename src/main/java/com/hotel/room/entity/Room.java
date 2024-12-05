@@ -9,7 +9,7 @@ import com.hotel.dto.response.RoomCreateResponse;
 
 @Data
 @Entity
-public class Room {
+public class Room implements RoomVisitor{
     @Id
     private String roomNumber;
     private int roomCapacity;
@@ -58,4 +58,43 @@ public class Room {
             this.roomPrice = new Price(flatRoomPrice, flatRoomType);
         }
     }
+
+    @Transient
+    private double finalPrice;
+
+    @Override
+    public void visit(SingleRoomPrice singleRoomPrice, double totalRoom, double roomBooked) {
+        finalPrice = singleRoomPrice.getPrice();
+        adjustPriceBasedOnAvailability(totalRoom,roomBooked);
+    }
+
+    @Override
+    public void visit(DoubleRoomPrice doubleRoomPrice, double totalRoom, double roomBooked) {
+        finalPrice = doubleRoomPrice.getPrice();
+        adjustPriceBasedOnAvailability(totalRoom,roomBooked);
+    }
+
+    @Override
+    public void visit(SuiteRoomPrice suiteRoomPrice, double totalRoom, double roomBooked) {
+        finalPrice = suiteRoomPrice.getPrice();
+        adjustPriceBasedOnAvailability(totalRoom,roomBooked);
+    }
+
+    private void adjustPriceBasedOnAvailability(double totalRoom, double roomBooked) {
+        double availabilityPercentage = ((totalRoom - roomBooked) / (double) totalRoom) * 100;
+
+        // Adjust pricing based on availability percentage
+        if (availabilityPercentage <= 10) { // Low availability: less than 10%
+            finalPrice *= 1.5; // 50% increase
+        } else if (availabilityPercentage <= 50) { // Medium availability: 10% - 50%
+            finalPrice *= 1.2; // 20% increase
+        } else if (availabilityPercentage > 50) { // High availability: more than 50%
+            finalPrice *= 1.0; // Base Price
+        }
+    }
+
+    public double getFinalPrice() {
+        return finalPrice;
+    }
+
 }

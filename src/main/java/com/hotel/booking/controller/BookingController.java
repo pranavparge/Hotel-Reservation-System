@@ -1,9 +1,14 @@
 package com.hotel.booking.controller;
 
 import com.hotel.dto.request.BookingUpdateRequest;
+import com.hotel.repository.BookingRepository;
+import com.hotel.repository.RoomRepository;
+import com.hotel.room.entity.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -19,6 +24,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookingController {
     private final IBookingService bookingService;
+
+    @Autowired
+    RoomRepository roomRepository;
+
+    @Autowired
+    BookingRepository bookingRepository;
 
     @PostMapping("/customer/bookings/create")
     public ResponseEntity<?> createBooking(@Valid @RequestBody BookingCreateRequest request) {
@@ -74,4 +85,21 @@ public class BookingController {
             return new ResponseEntity<>("Unable to delete booking!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/customer/bookings/price")
+    public ResponseEntity<?> getRoomPrice(@RequestParam(value = "startDate") String startDate) {
+
+        try {
+            String roomPrice = bookingService.getRoomPrice(startDate);
+            if (roomPrice != null) {
+                return new ResponseEntity<>(roomPrice, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Price not found", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("Unable to find price!", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 }
