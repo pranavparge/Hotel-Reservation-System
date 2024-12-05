@@ -1,12 +1,9 @@
 package com.hotel.booking.controller;
 
-import com.hotel.repository.BookingRepository;
-import com.hotel.repository.RoomRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import com.hotel.util.Error;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookingController {
     private final IBookingService bookingService;
-
-    @Autowired
-    RoomRepository roomRepository;
-
-    @Autowired
-    BookingRepository bookingRepository;
 
     @PostMapping("/customer/bookings/create")
     public ResponseEntity<?> createBooking(@Valid @RequestBody BookingCreateRequest request) {
