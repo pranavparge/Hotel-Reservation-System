@@ -8,6 +8,7 @@ import com.hotel.repository.CustomerRepository;
 import com.hotel.repository.StaffRepository;
 import com.hotel.user.entity.Customer;
 import com.hotel.user.entity.Staff;
+import com.hotel.util.Error;
 import com.hotel.util.JwtUtility;
 import com.hotel.util.TokenBlacklist;
 import jakarta.validation.Valid;
@@ -51,9 +52,15 @@ public class AuthController {
             CustomerSignUpResponse newCustomer = authService.createCustomer(request);
             return new ResponseEntity<>(newCustomer, HttpStatus.OK);
         } catch (EntityExistsException entityExistsException){
-            return new ResponseEntity<>("Customer already exists!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(
+                    new Error("Customer already exists!", entityExistsException.getMessage(), HttpStatus.BAD_REQUEST.value()),
+                    HttpStatus.BAD_REQUEST
+            );
         } catch (Exception e) {
-            return new ResponseEntity<>("Customer not created!", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(
+                    new Error("Customer not created!", e.getMessage(), HttpStatus.BAD_REQUEST.value()),
+                    HttpStatus.BAD_REQUEST
+            );
         }
     }
 
@@ -63,70 +70,126 @@ public class AuthController {
             StaffSignUpResponse newStaff = authService.createStaff(request);
             return new ResponseEntity<>(newStaff, HttpStatus.OK);
         } catch (EntityExistsException entityExistsException){
-            return new ResponseEntity<>("Staff already exists!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(
+                    new Error("Staff already exists!", entityExistsException.getMessage(), HttpStatus.BAD_REQUEST.value()),
+                    HttpStatus.BAD_REQUEST
+            );
         } catch (Exception e) {
-            return new ResponseEntity<>("Staff not created!", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(
+                    new Error("Staff not created!", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
         }
     }
 
     @PostMapping("/customer/sign-in")
-    public CustomerSignInResponse signInCustomer(@Valid @RequestBody CustomerSignInRequest request) {
+    public ResponseEntity<?> signInCustomer(@Valid @RequestBody CustomerSignInRequest request) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        } catch (BadCredentialsException e){
-            throw new BadCredentialsException("Incorrect Username or Password");
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+            final UserDetails userDetails = authService.userDetailsService().loadUserByUsername(request.getEmail());
+            Optional<Customer> optionalCustomer = customerRepository.findFirstByEmail(userDetails.getUsername());
+            if (optionalCustomer.isPresent()) {
+                final String jwt = jwtUtility.generateToken(userDetails, "CUSTOMER");
+                Customer customer = optionalCustomer.get();
+                CustomerSignInResponse response = new CustomerSignInResponse();
+                response.setJwt(jwt);
+                response.setCustomerID(customer.getCustomerID());
+                response.setProgramType(customer.getProgramType());
+                response.setName(customer.getName());
+                response.setEmail(customer.getEmail());
+                return ResponseEntity.ok(response);
+            } else {
+                return new ResponseEntity<>(
+                        new Error("Authentication Failed", "Customer not found", HttpStatus.UNAUTHORIZED.value()),
+                        HttpStatus.UNAUTHORIZED
+                );
+            }
+        } catch (BadCredentialsException e) {
+            return new ResponseEntity<>(
+                    new Error("Authentication Failed", "Incorrect username or password", HttpStatus.UNAUTHORIZED.value()),
+                    HttpStatus.UNAUTHORIZED
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    new Error("Sign-In Failed", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
         }
-        final UserDetails userDetails = authService.userDetailsService().loadUserByUsername(request.getEmail());
-        Optional<Customer> optionalCustomer = customerRepository.findFirstByEmail(userDetails.getUsername());
-        final String jwt = jwtUtility.generateToken(userDetails, "CUSTOMER");
-        CustomerSignInResponse customerSignInResponse = new CustomerSignInResponse();
-        if(optionalCustomer.isPresent()) {
-            customerSignInResponse.setJwt(jwt);
-            customerSignInResponse.setCustomerID(optionalCustomer.get().getCustomerID());
-            customerSignInResponse.setProgramType(optionalCustomer.get().getProgramType());
-            customerSignInResponse.setName(optionalCustomer.get().getName());
-            customerSignInResponse.setEmail(optionalCustomer.get().getEmail());
-        }
-        return customerSignInResponse;
     }
 
     @PostMapping("/staff/sign-in")
-    public StaffSignInResponse signInStaff(@Valid @RequestBody StaffSignInRequest request) {
+    public ResponseEntity<?> signInStaff(@Valid @RequestBody StaffSignInRequest request) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        } catch (BadCredentialsException e){
-            throw new BadCredentialsException("Incorrect Username or Password");
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+            final UserDetails userDetails = authService.userDetailsService().loadUserByUsername(request.getEmail());
+            Optional<Staff> optionalStaff = staffRepository.findFirstByEmail(userDetails.getUsername());
+            if (optionalStaff.isPresent()) {
+                final String jwt = jwtUtility.generateToken(userDetails, "STAFF");
+                Staff staff = optionalStaff.get();
+                StaffSignInResponse response = new StaffSignInResponse();
+                response.setJwt(jwt);
+                response.setStaffID(staff.getStaffID());
+                response.setName(staff.getName());
+                response.setEmail(staff.getEmail());
+                return ResponseEntity.ok(response);
+            } else {
+                return new ResponseEntity<>(
+                        new Error("Authentication Failed", "Staff not found", HttpStatus.UNAUTHORIZED.value()),
+                        HttpStatus.UNAUTHORIZED
+                );
+            }
+        } catch (BadCredentialsException e) {
+            return new ResponseEntity<>(
+                    new Error("Authentication Failed", "Incorrect username or password", HttpStatus.UNAUTHORIZED.value()),
+                    HttpStatus.UNAUTHORIZED
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    new Error("Sign-In Failed", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
         }
-        final UserDetails userDetails = authService.userDetailsService().loadUserByUsername(request.getEmail());
-        Optional<Staff> optionalStaff = staffRepository.findFirstByEmail(userDetails.getUsername());
-        final String jwt = jwtUtility.generateToken(userDetails, "STAFF");
-        StaffSignInResponse staffSignInResponse = new StaffSignInResponse();
-        if(optionalStaff.isPresent()) {
-            staffSignInResponse.setJwt(jwt);
-            staffSignInResponse.setStaffID(optionalStaff.get().getStaffID());
-            staffSignInResponse.setName(optionalStaff.get().getName());
-            staffSignInResponse.setEmail(optionalStaff.get().getEmail());
-        }
-        return staffSignInResponse;
     }
 
     @PostMapping("/staff/log-out")
     public ResponseEntity<?> logoutStaff(@RequestHeader("Authorization") String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.badRequest().body("Invalid token format");
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return new ResponseEntity<>(
+                        new Error("Invalid Token", "Invalid token format", HttpStatus.BAD_REQUEST.value()),
+                        HttpStatus.BAD_REQUEST
+                );
+            }
+            String token = authHeader.substring(7);
+            tokenBlacklist.add(token);
+            return ResponseEntity.ok("Logged out successfully");
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    new Error("Logout Failed", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
         }
-        String token = authHeader.substring(7);
-        tokenBlacklist.add(token);
-        return ResponseEntity.ok("Logged out successfully");
     }
 
     @PostMapping("/customer/log-out")
     public ResponseEntity<?> logoutCustomer(@RequestHeader("Authorization") String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.badRequest().body("Invalid token format");
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return new ResponseEntity<>(
+                        new Error("Invalid Token", "Invalid token format", HttpStatus.BAD_REQUEST.value()),
+                        HttpStatus.BAD_REQUEST
+                );
+            }
+            String token = authHeader.substring(7);
+            tokenBlacklist.add(token);
+            return ResponseEntity.ok("Logged out successfully");
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    new Error("Logout Failed", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
         }
-        String token = authHeader.substring(7);
-        tokenBlacklist.add(token);
-        return ResponseEntity.ok("Logged out successfully");
     }
 }

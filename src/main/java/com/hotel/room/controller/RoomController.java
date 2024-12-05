@@ -2,6 +2,7 @@ package com.hotel.room.controller;
 
 import java.util.List;
 
+import com.hotel.util.Error;
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
@@ -24,10 +25,16 @@ public class RoomController {
         try {
             RoomCreateResponse newRoom = roomService.createRoom(request);
             return new ResponseEntity<>(newRoom, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>("Invalid input: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            return new ResponseEntity<>(
+                    new Error("Invalid input!", illegalArgumentException.getMessage(), HttpStatus.BAD_REQUEST.value()),
+                    HttpStatus.BAD_REQUEST
+            );
         } catch (Exception e) {
-            return new ResponseEntity<>("Room not created!", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(
+                    new Error("Room not created!", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -37,7 +44,10 @@ public class RoomController {
             List<RoomCreateResponse> response = roomService.viewRooms();
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Unable to fetch rooms!", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(
+                    new Error("Unable to fetch rooms!", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
         }
     }
 }

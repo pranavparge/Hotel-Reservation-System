@@ -60,7 +60,6 @@ public class BookingService implements IBookingService {
                     List<Room> availableRooms = roomRepository.findAvailableRoomsByTypeAndDates(
                             roomType, request.getStartDate(), request.getEndDate());
 
-                    System.out.println("AVAILABLE ROOMS:" + availableRooms);
                     if (availableRooms.size() < quantity) {
                         throw new IllegalArgumentException("Not enough " + roomType + " rooms available. Requested: " + quantity
                                 + ", Available: " + availableRooms.size());
