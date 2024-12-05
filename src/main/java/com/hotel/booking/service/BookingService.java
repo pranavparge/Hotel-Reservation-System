@@ -19,10 +19,7 @@ import com.hotel.repository.CustomerRepository;
 import com.hotel.dto.request.BookingCreateRequest;
 import com.hotel.dto.response.BookingCreateResponse;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,19 +30,15 @@ public class BookingService implements IBookingService {
     private final RoomRepository roomRepository;
 
     private boolean isRoomAvailableForDates(Room room, Date startDate, Date endDate, Long bookingId) {
-        // Check if the room is already booked for the given date range
         List<Booking> overlappingBookings = bookingRepository.findBookingsByRoomAndDates(room.getRoomNumber(), startDate, endDate);
 
-        // Exclude the current booking being updated (if provided)
         if (bookingId != null) {
             overlappingBookings = overlappingBookings.stream()
                     .filter(booking -> !booking.getBookingId().equals(bookingId))
                     .collect(Collectors.toList());
         }
-
         return overlappingBookings.isEmpty();
     }
-
 
     @Override
     @Transactional
@@ -170,34 +163,43 @@ public class BookingService implements IBookingService {
         }
 
         return bookingRepository.findById(bookingId).map(existingBooking -> {
-            // Validate and keep currently allocated rooms
             List<Room> existingRooms = existingBooking.getTotalRooms().stream()
                     .filter(room -> isRoomAvailableForDates(room, request.getStartDate(), request.getEndDate(), existingBooking.getBookingId()))
                     .collect(Collectors.toList());
 
-            // Handle new room allocations if requested
-            List<Room> newlyAllocatedRooms = request.getRoomTypeToQuantity().entrySet().stream()
-                    .flatMap(entry -> {
-                        RoomType roomType = entry.getKey();
-                        int quantity = entry.getValue();
-
-                        List<Room> availableRooms = roomRepository.findAvailableRoomsByTypeAndDates(
-                                roomType, request.getStartDate(), request.getEndDate(), bookingId);
-
-                        if (availableRooms.size() < quantity) {
-                            throw new IllegalArgumentException("Not enough " + roomType + " rooms available. Requested: " + quantity
-                                    + ", Available: " + availableRooms.size());
-                        }
-
-                        return availableRooms.stream().limit(quantity);
-                    })
-                    .collect(Collectors.toList());
-
-            // Combine existing rooms and newly allocated rooms
             List<Room> updatedRooms = new ArrayList<>(existingRooms);
-            updatedRooms.addAll(newlyAllocatedRooms);
+            for (Map.Entry<RoomType, Integer> entry : request.getRoomTypeToQuantity().entrySet()) {
+                RoomType roomType = entry.getKey();
+                int requestedQuantity = entry.getValue();
 
-            // Validate total guest capacity
+                long existingQuantity = existingRooms.stream()
+                        .filter(room -> room.getRoomType() == roomType)
+                        .count();
+
+                int additionalQuantity = requestedQuantity - (int) existingQuantity;
+
+                if (additionalQuantity > 0) {
+                    List<Room> availableRooms = roomRepository.findAvailableRoomsByTypeAndDates(
+                            roomType, request.getStartDate(), request.getEndDate(), bookingId);
+
+                    if (availableRooms.size() < additionalQuantity) {
+                        throw new IllegalArgumentException("Not enough " + roomType + " rooms available. Requested: " +
+                                requestedQuantity + ", Available: " + availableRooms.size());
+                    }
+
+                    updatedRooms.addAll(availableRooms.subList(0, additionalQuantity));
+                } else if (additionalQuantity < 0) {
+                    int excessQuantity = -additionalQuantity;
+                    for (Iterator<Room> iterator = updatedRooms.iterator(); iterator.hasNext() && excessQuantity > 0; ) {
+                        Room room = iterator.next();
+                        if (room.getRoomType() == roomType) {
+                            iterator.remove();
+                            excessQuantity--;
+                        }
+                    }
+                }
+            }
+
             int totalRoomCapacity = updatedRooms.stream()
                     .mapToInt(Room::getRoomCapacity)
                     .sum();
@@ -216,7 +218,6 @@ public class BookingService implements IBookingService {
             existingBooking.getTotalRooms().clear();
             existingBooking.getTotalRooms().addAll(updatedRooms);
 
-            // Handle additional services, discounts, etc.
             Customer customer = customerRepository.findById(existingBooking.getCustomerID())
                     .orElseThrow(() -> new IllegalArgumentException("Customer not found for ID: " + existingBooking.getCustomerID()));
 
