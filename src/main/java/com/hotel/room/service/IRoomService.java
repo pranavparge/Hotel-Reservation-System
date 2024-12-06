@@ -12,4 +12,5 @@ public interface IRoomService {
     List<RoomCreateResponse> viewRooms();
     RoomCreateResponse createRoom(RoomCreateRequest request);
     RoomPriceResponse getRoomPrice(RoomPriceRequest roomPriceRequest);
+    void updateRoomStatus(String roomNumber, String status);
 }

@@ -19,6 +19,7 @@ public class Room implements IRoomVisitor {
     private double flatRoomPrice;
     @Transient
     private RoomType flatRoomType;
+    private String status;
 
     public Room() {}
 
@@ -26,6 +27,7 @@ public class Room implements IRoomVisitor {
         this.roomNumber = roomNumber;
         this.roomCapacity = roomCapacity;
         this.roomPrice = roomPrice;
+        this.status = "Available";
     }
 
     public RoomType getRoomType() {
@@ -95,6 +97,14 @@ public class Room implements IRoomVisitor {
 
     public double getFinalPrice() {
         return finalPrice;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 }

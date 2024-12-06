@@ -65,5 +65,26 @@ public class RoomController {
                     .body("An unexpected error occurred: " + e.getMessage());
         }
     }
+
+    // New Endpoint: Update Room Status
+    @PostMapping("/staff/rooms/{roomNumber}/status")
+    public ResponseEntity<?> updateRoomStatus(
+            @PathVariable String roomNumber,
+            @RequestBody String status) {
+        try {
+            roomService.updateRoomStatus(roomNumber, status); // Call service to update status
+            return new ResponseEntity<>("Room status updated to: " + status, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(
+                    new Error("Invalid input!", e.getMessage(), HttpStatus.BAD_REQUEST.value()),
+                    HttpStatus.BAD_REQUEST
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    new Error("Unable to update room status!", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+    }
 }
 
