@@ -97,4 +97,8 @@ public class Room implements IRoomVisitor {
             finalPrice *= 1.0; // Base Price
         }
     }
+
+    public double getFinalPrice() {
+        return finalPrice;
+    }
 }

@@ -9,30 +9,25 @@ import com.hotel.dto.response.PaymentResponse;
 import com.hotel.enums.PaymentMethod;
 import com.hotel.enums.PaymentStatus;
 
-// import com.hotel.dto.response.PaymentResponse;
-// import com.hotel.enums.PaymentMethod;
-// import com.hotel.enums.PaymentStatus;
-
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long paymentID;
+    public Long paymentId;
 
     @CreationTimestamp
     private Instant timeStamp;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_method", insertable = false, updatable = false)
+    @Column(name = "payment_method")
     public PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)
     @Transient
     public PaymentStatus status;
 
-    @Column(name = "bookingid")
-    public String bookingID;
+    public String bookingId;
 
     public double amount;
 
@@ -41,7 +36,7 @@ public abstract class Payment {
 
     public Payment(String bookingID, String customerEmail, Double amount, PaymentMethod paymentMethod) {
         this.amount = amount;
-        this.bookingID = bookingID;
+        this.bookingId = bookingID;
         this.customerEmail = customerEmail;
         this.paymentMethod = paymentMethod;
     }

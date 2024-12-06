@@ -1,6 +1,5 @@
 package com.hotel.payment.entity;
 
-// import com.hotel.payment.repository.PaymentRepositoryImpl;
 import com.hotel.dto.response.PaymentResponse;
 import com.hotel.enums.PaymentMethod;
 import com.hotel.enums.PaymentStatus;
@@ -22,7 +21,6 @@ public class PaypalPaymentModel extends Payment{
         super("", "", 0.0, PaymentMethod.PAYPAL);
     }
 
-
     @Override
     public void processPayment(){
         System.out.println("Payment processed via paypal");
@@ -36,10 +34,9 @@ public class PaypalPaymentModel extends Payment{
         this.status = PaymentStatus.DONE;
     }
 
-
     @Override
     public String getBookingId() {
-        return this.bookingID;
+        return this.bookingId;
     }
 
     @Override
@@ -52,7 +49,6 @@ public class PaypalPaymentModel extends Payment{
         return this.customerEmail;
     }
 
-
     @Override
     public PaymentResponse notifyPayment(PaymentNotifier notifier){
         //IObserver logic here
@@ -60,12 +56,10 @@ public class PaypalPaymentModel extends Payment{
         return new PaymentResponse(status.paymentstatusResponse()+" via "+paymentMethod.methodResponse(), status.paymentstatusResponse(),status.statusResult());
     }
 
-
     @Override
     public void setBookingId(String bookingID) {
-        this.bookingID = bookingID;
+        this.bookingId = bookingID;
     }
-
 
     @Override
     public void setAmount(Double amount) {

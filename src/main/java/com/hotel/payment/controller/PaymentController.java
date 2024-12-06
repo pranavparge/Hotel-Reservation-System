@@ -20,13 +20,12 @@ import lombok.RequiredArgsConstructor;
 
 
 @RestController
-@RequestMapping("/payment")
 @RequiredArgsConstructor
 public class PaymentController {
     @Autowired
     private IPaymentService IPaymentService;
     
-    @PostMapping("/pay")
+    @PostMapping("/customer/pay")
     public ResponseEntity<?> processPayment(@RequestBody Map<String,Object> data) {
         try {
             PaymentRequest request = new PaymentRequest(data);
@@ -47,7 +46,7 @@ public class PaymentController {
         }
     }
 
-    @PostMapping("/refund")
+    @PostMapping("/customer/refund")
     public ResponseEntity<?> refundPayment(@RequestBody Map<String, Object> data) {
         try {
             String bookingid = data.get("id").toString();

@@ -13,7 +13,7 @@ import com.hotel.dto.response.StaffSignUpResponse;
 public class Staff extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long staffID;
+    private Long staffId;
 
     public Staff() {}
 
@@ -23,7 +23,7 @@ public class Staff extends User {
 
     public StaffSignUpResponse getStaffResponse() {
         StaffSignUpResponse response = new StaffSignUpResponse();
-        response.setStaffID(staffID);
+        response.setStaffId(staffId);
         response.setName(getName());
         response.setEmail(getEmail());
         return response;

@@ -94,7 +94,7 @@ public class AuthController {
                 Customer customer = optionalCustomer.get();
                 CustomerSignInResponse response = new CustomerSignInResponse();
                 response.setJwt(jwt);
-                response.setCustomerID(customer.getCustomerID());
+                response.setCustomerId(customer.getCustomerId());
                 response.setProgramType(customer.getProgramType());
                 response.setName(customer.getName());
                 response.setEmail(customer.getEmail());
@@ -130,7 +130,7 @@ public class AuthController {
                 Staff staff = optionalStaff.get();
                 StaffSignInResponse response = new StaffSignInResponse();
                 response.setJwt(jwt);
-                response.setStaffID(staff.getStaffID());
+                response.setStaffId(staff.getStaffId());
                 response.setName(staff.getName());
                 response.setEmail(staff.getEmail());
                 return ResponseEntity.ok(response);

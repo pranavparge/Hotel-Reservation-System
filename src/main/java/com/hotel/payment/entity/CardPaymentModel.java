@@ -26,7 +26,7 @@ public class CardPaymentModel extends Payment{
 
     @Override
     public void processPayment(){
-        System.out.println("Payment processed via card" + bookingID + " "+ customerEmail); 
+        System.out.println("Payment processed via card" + bookingId + " "+ customerEmail);
         this.status = PaymentStatus.DONE;
     }
 
@@ -37,10 +37,9 @@ public class CardPaymentModel extends Payment{
         this.status = PaymentStatus.DONE;
     }
 
-
     @Override
     public String getBookingId() {
-        return this.bookingID;
+        return this.bookingId;
     }
 
     @Override
@@ -60,18 +59,15 @@ public class CardPaymentModel extends Payment{
         return new PaymentResponse(status.paymentstatusResponse()+" via "+paymentMethod.methodResponse(), status.paymentstatusResponse(), status.statusResult());
     }
 
-
     @Override
     public void setBookingId(String bookingID) {
-        this.bookingID = bookingID;
+        this.bookingId = bookingID;
     }
-
 
     @Override
     public void setAmount(Double amount) {
         this.amount = amount;
     }
-
 
     @Override
     public void setCustomerEmail(String email) {

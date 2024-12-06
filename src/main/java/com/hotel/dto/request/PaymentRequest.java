@@ -23,7 +23,7 @@ import lombok.Data;
 @Data
 public class PaymentRequest {
     @NotNull(message = "Booking ID is required")
-    private String bookingID;
+    private String bookingId;
     @NotNull(message =  "Email is required")
     private String customerEmail;
     @NotNull(message = "Amount of the booking is required")
@@ -37,7 +37,6 @@ public class PaymentRequest {
 
     private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
 
-
     private IPaymentDetails setPaymentDetails(Map<String, Object> data, PaymentMethod method) {
         switch (method) {
             case CARD:
@@ -48,6 +47,7 @@ public class PaymentRequest {
                 throw new IllegalArgumentException("Unsupported payment method: " + method);
         }
     }
+
     private PaymentMethod setPaymentMethod(String method){
         switch(method){
             case "Card":
@@ -61,7 +61,7 @@ public class PaymentRequest {
 
     @SuppressWarnings("unchecked")
     public PaymentRequest(Map<String, Object> data){
-        this.bookingID = data.get("bookingID").toString();
+        this.bookingId = data.get("bookingId").toString();
         this.customerEmail = data.get("customerEmail").toString();
         this.amount = Double.parseDouble(data.get("amount").toString());
         this.paymentMethod = setPaymentMethod(data.get("paymentMethod").toString());
@@ -72,8 +72,8 @@ public class PaymentRequest {
         return this.amount;
     }
 
-    public String bookingID(){
-        return this.bookingID;
+    public String bookingId(){
+        return this.bookingId;
     }
 
     public IPaymentDetails getPaymentDetails(){
