@@ -13,7 +13,6 @@ import com.hotel.repository.RoomRepository;
 import com.hotel.dto.request.RoomCreateRequest;
 import com.hotel.dto.response.RoomCreateResponse;
 
-import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -55,8 +54,6 @@ public class RoomService implements IRoomService {
         Integer singleRoomBooked = roomRepository.getRoomNotAvailable(roomPriceRequest.getStartDate(), "SINGLE");
         Integer doubleRoomBooked = roomRepository.getRoomNotAvailable(roomPriceRequest.getStartDate(), "DOUBLE");
         Integer suiteRoomBooked = roomRepository.getRoomNotAvailable(roomPriceRequest.getStartDate(), "SUITE");
-
-        JSONObject jsonObject = new JSONObject();
 
         Price singleRoom = new SingleRoomPrice();
         Price doubleRoom = new DoubleRoomPrice();

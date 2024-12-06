@@ -14,7 +14,7 @@ public class EmailServiceObserver implements IObserver {
 
     @Override
     public void update(Payment paymentModel, String message) {
-        System.out.println(paymentModel.customerEmail + " " + paymentModel.bookingID);
+        System.out.println(paymentModel.customerEmail + " " + paymentModel.bookingId);
         System.out.println("Payment email sent to the customer: " + paymentModel.customerEmail + " For payment mode: "+paymentModel.paymentMethod.name());
         sendEmail(paymentModel.customerEmail, message);
     }

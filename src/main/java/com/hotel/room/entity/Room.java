@@ -96,5 +96,4 @@ public class Room implements IRoomVisitor {
     public double getFinalPrice() {
         return finalPrice;
     }
-
 }

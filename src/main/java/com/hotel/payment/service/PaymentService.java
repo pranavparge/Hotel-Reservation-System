@@ -36,18 +36,16 @@ public class PaymentService implements IPaymentService {
             if(validDetails != ""){
                 throw new IllegalArgumentException(validDetails);
             }
-            if(!paymentRepository.findPaymentByBookingID(request.getBookingId()).isEmpty()){
+            if(!paymentRepository.findPaymentByBookingId(request.getBookingId()).isEmpty()){
                 throw new IllegalStateException("Payment has been processed");
             }
-            final Payment paymentModel = paymentFactory.createPayment(request.getAmount(), request.bookingID(), request.getEmail(), request.getPaymentDetails());
+            final Payment paymentModel = paymentFactory.createPayment(request.getAmount(), request.bookingId(), request.getEmail(), request.getPaymentDetails());
             paymentModel.processPayment();
             paymentRepository.save(paymentModel);
             return paymentModel.notifyPayment(paymentNotifier);
         } catch (Exception e) {
             return new PaymentResponse(e.getMessage(), "Payment failure",false);
         }
-
-
     }
 
     @Override
@@ -56,10 +54,9 @@ public class PaymentService implements IPaymentService {
             if(id == ""){
                 throw new IllegalArgumentException("Booking id not provided");
             }
-            List<Payment> modelList = paymentRepository.findPaymentByBookingID(id);
+            List<Payment> modelList = paymentRepository.findPaymentByBookingId(id);
             if(modelList.isEmpty()){
                 throw new IllegalStateException("No payment record found to process the refund");
-                
             }
             Payment model = modelList.get(0);
             model.refundPayment();
