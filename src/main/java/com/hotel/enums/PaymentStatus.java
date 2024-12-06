@@ -1,4 +1,4 @@
-package com.hotel.payment.enums;
+package com.hotel.enums;
 
 public enum PaymentStatus {
     TRANSIT,

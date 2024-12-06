@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hotel.payment.dto.PaymentRequest;
-import com.hotel.payment.dto.PaymentResponse;
+import com.hotel.dto.request.PaymentRequest;
+import com.hotel.dto.response.PaymentResponse;
 import com.hotel.payment.service.PaymentService;
 
 import com.hotel.util.Error;

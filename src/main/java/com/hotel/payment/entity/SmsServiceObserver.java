@@ -1,8 +1,6 @@
-package com.hotel.payment.notification_service.email_service.observers;
+package com.hotel.payment.entity;
 
 import org.springframework.stereotype.Component;
-
-import com.hotel.payment.models.Payment;
 
 @Component
 public class SmsServiceObserver implements Observer{

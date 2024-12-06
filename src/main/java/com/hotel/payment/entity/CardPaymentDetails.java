@@ -1,9 +1,6 @@
-package com.hotel.payment.models.payment_details;
+package com.hotel.payment.entity;
 
 import java.util.Map;
-
-import com.hotel.payment.models.CardPaymentModel;
-import com.hotel.payment.models.Payment;
 
 public class CardPaymentDetails implements PaymentDetails {
     private String cardNumber;

@@ -3,12 +3,12 @@ package com.hotel.payment.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hotel.payment.dto.PaymentRequest;
-import com.hotel.payment.dto.PaymentResponse;
-import com.hotel.payment.factory.PaymentFactory;
-import com.hotel.payment.models.Payment;
-import com.hotel.payment.notification_service.email_service.subjects.PaymentNotifier;
-import com.hotel.payment.repository.PaymentRepository;
+import com.hotel.dto.request.PaymentRequest;
+import com.hotel.dto.response.PaymentResponse;
+import com.hotel.payment.entity.PaymentFactory;
+import com.hotel.payment.entity.Payment;
+import com.hotel.payment.entity.PaymentNotifier;
+import com.hotel.repository.PaymentRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

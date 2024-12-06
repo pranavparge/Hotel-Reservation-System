@@ -3,9 +3,9 @@ package com.hotel.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
-import com.hotel.payment.notification_service.email_service.observers.EmailServiceObserver;
-import com.hotel.payment.notification_service.email_service.observers.SmsServiceObserver;
-import com.hotel.payment.notification_service.email_service.subjects.PaymentNotifier;
+import com.hotel.payment.entity.EmailServiceObserver;
+import com.hotel.payment.entity.SmsServiceObserver;
+import com.hotel.payment.entity.PaymentNotifier;
 
 import jakarta.annotation.PostConstruct;
 
@@ -25,4 +25,3 @@ public class NotificationConfig {
         System.out.println("Notification services initalised");
     }
 }
-

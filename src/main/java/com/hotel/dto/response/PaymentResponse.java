@@ -1,11 +1,8 @@
-package com.hotel.payment.dto;
+package com.hotel.dto.response;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 
 import org.hibernate.annotations.CreationTimestamp;
-
-import com.hotel.payment.models.Payment;
 
 import lombok.Data;
 

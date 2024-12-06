@@ -1,6 +1,4 @@
-package com.hotel.payment.models.payment_details;
-
-import com.hotel.payment.models.Payment;
+package com.hotel.payment.entity;
 
 public interface PaymentDetails {
     public abstract void showPaymentDetails(); 

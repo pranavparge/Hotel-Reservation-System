@@ -1,12 +1,12 @@
-package com.hotel.payment.dto;
+package com.hotel.dto.request;
 
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import com.hotel.payment.enums.PaymentMethod;
-import com.hotel.payment.models.payment_details.CardPaymentDetails;
-import com.hotel.payment.models.payment_details.PaymentDetails;
-import com.hotel.payment.models.payment_details.PaypalPaymentDetails;
+import com.hotel.enums.PaymentMethod;
+import com.hotel.payment.entity.CardPaymentDetails;
+import com.hotel.payment.entity.PaymentDetails;
+import com.hotel.payment.entity.PaypalPaymentDetails;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

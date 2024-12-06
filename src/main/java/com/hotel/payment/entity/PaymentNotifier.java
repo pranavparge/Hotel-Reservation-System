@@ -1,12 +1,9 @@
-package com.hotel.payment.notification_service.email_service.subjects;
+package com.hotel.payment.entity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
-
-import com.hotel.payment.models.Payment;
-import com.hotel.payment.notification_service.email_service.observers.Observer;
 
 @Component
 public class PaymentNotifier implements Subjects {

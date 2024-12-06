@@ -1,11 +1,9 @@
-package com.hotel.payment.notification_service.email_service.observers;
+package com.hotel.payment.entity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
-
-import com.hotel.payment.models.Payment;
 
 @Component
 public class EmailServiceObserver implements Observer{

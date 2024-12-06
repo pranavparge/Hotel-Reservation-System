@@ -1,9 +1,6 @@
-package com.hotel.payment.factory;
+package com.hotel.payment.entity;
 
 import org.springframework.stereotype.Component;
-
-import com.hotel.payment.models.Payment;
-import com.hotel.payment.models.payment_details.PaymentDetails;
 
 @Component
 public class PaymentFactory {

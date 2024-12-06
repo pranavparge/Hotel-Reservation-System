@@ -1,7 +1,7 @@
 package com.hotel.payment.service;
 
-import com.hotel.payment.dto.PaymentRequest;
-import com.hotel.payment.dto.PaymentResponse;
+import com.hotel.dto.request.PaymentRequest;
+import com.hotel.dto.response.PaymentResponse;
 
 public interface PaymentService {
     PaymentResponse processPayment(PaymentRequest request);

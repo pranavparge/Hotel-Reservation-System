@@ -1,10 +1,9 @@
-package com.hotel.payment.models;
+package com.hotel.payment.entity;
 
 // import com.hotel.payment.repository.PaymentRepositoryImpl;
-import com.hotel.payment.dto.PaymentResponse;
-import com.hotel.payment.enums.PaymentMethod;
-import com.hotel.payment.enums.PaymentStatus;
-import com.hotel.payment.notification_service.email_service.subjects.PaymentNotifier;
+import com.hotel.dto.response.PaymentResponse;
+import com.hotel.enums.PaymentMethod;
+import com.hotel.enums.PaymentStatus;
 
 import jakarta.persistence.*;
 

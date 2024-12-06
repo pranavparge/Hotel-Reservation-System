@@ -9,7 +9,6 @@ import com.hotel.user.entity.Customer;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
-import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import com.hotel.booking.entity.*;
@@ -321,6 +320,4 @@ public class BookingService implements IBookingService {
             return true;
         }).orElse(false);
     }
-
-
 }

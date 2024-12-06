@@ -4,24 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.mock.http.server.reactive.MockServerHttpRequest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.hotel.payment.controller.PaymentController;
-import com.hotel.payment.dto.PaymentRequest;
-import com.hotel.payment.dto.PaymentResponse;
-import com.hotel.payment.enums.PaymentMethod;
-import com.hotel.payment.models.CardPaymentModel;
-import com.hotel.payment.models.Payment;
-import com.hotel.payment.models.payment_details.CardPaymentDetails;
-import com.hotel.payment.models.payment_details.PaymentDetails;
-import com.hotel.payment.repository.PaymentRepository;
+import com.hotel.dto.request.PaymentRequest;
+import com.hotel.dto.response.PaymentResponse;
+import com.hotel.enums.PaymentMethod;
+import com.hotel.repository.PaymentRepository;
 import com.hotel.payment.service.PaymentService;
 
 import static org.junit.jupiter.api.Assertions.*;
