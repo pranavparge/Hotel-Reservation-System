@@ -15,7 +15,7 @@ import com.hotel.dto.response.CustomerSignUpResponse;
 public class Customer extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long customerID;
+    private Long customerId;
     @Enumerated(EnumType.STRING)
     private ProgramType programType;
     @Transient
@@ -40,7 +40,7 @@ public class Customer extends User {
 
     public CustomerSignUpResponse getCustomerResponse() {
         CustomerSignUpResponse response = new CustomerSignUpResponse();
-        response.setCustomerID(customerID);
+        response.setCustomerId(customerId);
         response.setProgramType(programType);
         response.setName(getName());
         response.setEmail(getEmail());

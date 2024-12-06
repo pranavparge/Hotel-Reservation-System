@@ -1,14 +1,13 @@
 package com.hotel.dto.request;
 
-import com.hotel.enums.RoomType;
-import com.hotel.room.entity.Room;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import com.hotel.enums.RoomType;
+import jakarta.validation.constraints.NotNull;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 @Data
 public class BookingUpdateRequest {

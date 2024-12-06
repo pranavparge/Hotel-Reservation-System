@@ -24,7 +24,7 @@ public class Booking implements IAdditionalServicesComponent {
     private Long bookingId;
     @CreationTimestamp
     private Instant timeStamp;
-    private Long customerID;
+    private Long customerId;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(
             name = "booking_total_rooms",
@@ -51,8 +51,8 @@ public class Booking implements IAdditionalServicesComponent {
 
     public BookingCreateResponse getBookingResponse() {
         BookingCreateResponse response = new BookingCreateResponse();
-        response.setBookingID(bookingId);
-        response.setCustomerID(customerID);
+        response.setBookingId(bookingId);
+        response.setCustomerId(customerId);
         response.setAdditionalServices(additionalServices);
         response.setTotalPrice(totalPrice);
         response.setStartDate(startDate);

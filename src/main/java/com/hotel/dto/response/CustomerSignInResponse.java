@@ -5,7 +5,7 @@ import com.hotel.enums.ProgramType;
 
 @Data
 public class CustomerSignInResponse {
-    private Long customerID;
+    private Long customerId;
     private ProgramType programType;
     private String email;
     private String name;

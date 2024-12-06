@@ -23,7 +23,7 @@ import lombok.Data;
 @Data
 public class PaymentRequest {
     @NotNull(message = "Booking ID is required")
-    private String bookingID;
+    private String bookingId;
     @NotNull(message =  "Email is required")
     private String customerEmail;
     @NotNull(message = "Amount of the booking is required")
@@ -61,7 +61,7 @@ public class PaymentRequest {
 
     @SuppressWarnings("unchecked")
     public PaymentRequest(Map<String, Object> data){
-        this.bookingID = data.get("bookingID").toString();
+        this.bookingId = data.get("bookingID").toString();
         this.customerEmail = data.get("customerEmail").toString();
         this.amount = Double.parseDouble(data.get("amount").toString());
         this.paymentMethod = setPaymentMethod(data.get("paymentMethod").toString());
@@ -73,7 +73,7 @@ public class PaymentRequest {
     }
 
     public String bookingID(){
-        return this.bookingID;
+        return this.bookingId;
     }
 
     public IPaymentDetails getPaymentDetails(){

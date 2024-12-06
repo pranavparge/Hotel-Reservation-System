@@ -31,7 +31,6 @@ public abstract class Payment {
     @Transient
     public PaymentStatus status;
 
-    @Column(name = "bookingid")
     public String bookingID;
 
     public double amount;

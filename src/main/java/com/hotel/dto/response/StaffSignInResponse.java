@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class StaffSignInResponse {
-    private Long staffID;
+    private Long staffId;
     private String email;
     private String name;
     private String jwt;

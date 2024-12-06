@@ -6,8 +6,8 @@ import java.util.List;
 
 @Data
 public class BookingCreateResponse {
-    private Long bookingID;
-    private Long customerID;
+    private Long bookingId;
+    private Long customerId;
     private List<String> additionalServices;
     private double totalPrice;
     private Date startDate;

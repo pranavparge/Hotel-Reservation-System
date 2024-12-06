@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    long countByCustomerID(@Param("customerID") Long customerID);
+    long countByCustomerId(@Param("customerId") Long customerId);
     @Query("""
         SELECT b FROM Booking b 
         JOIN b.totalRooms r 
@@ -22,5 +22,4 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate
     );
-
 }

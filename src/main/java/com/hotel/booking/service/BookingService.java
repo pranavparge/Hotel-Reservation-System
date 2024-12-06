@@ -48,8 +48,8 @@ public class BookingService implements IBookingService {
             throw new IllegalArgumentException("End date must be after start date and cannot be the same as start date.");
         }
 
-        Customer customer = customerRepository.findById(request.getCustomerID())
-                .orElseThrow(() -> new IllegalArgumentException("Customer with ID " + request.getCustomerID() + " does not exist."));
+        Customer customer = customerRepository.findById(request.getCustomerId())
+                .orElseThrow(() -> new IllegalArgumentException("Customer with ID " + request.getCustomerId() + " does not exist."));
 
         List<Room> allocatedRooms = request.getRoomTypeToQuantity().entrySet().stream()
                 .flatMap(entry -> {
@@ -113,7 +113,7 @@ public class BookingService implements IBookingService {
         }
 
         Booking booking = new Booking();
-        booking.setCustomerID(request.getCustomerID());
+        booking.setCustomerId(request.getCustomerId());
         booking.setTotalRooms(allocatedRooms);
         booking.setStartDate(request.getStartDate());
         booking.setEndDate(request.getEndDate());
@@ -152,7 +152,7 @@ public class BookingService implements IBookingService {
             discount = 0.10;
             totalPrice = roomPriceAvail;
         } else if (customer.getProgramType().equals(ProgramType.LOYALTY)) {
-            long bookingCount = bookingRepository.countByCustomerID(request.getCustomerID());
+            long bookingCount = bookingRepository.countByCustomerId(request.getCustomerId());
             if (bookingCount >= 10) {
                 discount = 0.10;
             } else if (bookingCount >= 5) {
@@ -246,8 +246,8 @@ public class BookingService implements IBookingService {
             existingBooking.getTotalRooms().clear();
             existingBooking.getTotalRooms().addAll(updatedRooms);
 
-            Customer customer = customerRepository.findById(existingBooking.getCustomerID())
-                    .orElseThrow(() -> new IllegalArgumentException("Customer not found for ID: " + existingBooking.getCustomerID()));
+            Customer customer = customerRepository.findById(existingBooking.getCustomerId())
+                    .orElseThrow(() -> new IllegalArgumentException("Customer not found for ID: " + existingBooking.getCustomerId()));
 
             IAdditionalServicesComponent decoratedBooking = existingBooking;
             existingBooking.getAdditionalServices().clear();
@@ -287,7 +287,7 @@ public class BookingService implements IBookingService {
             if (customer.getProgramType().equals(ProgramType.MEMBER)) {
                 discount = 0.10;
             } else if (customer.getProgramType().equals(ProgramType.LOYALTY)) {
-                long bookingCount = bookingRepository.countByCustomerID(existingBooking.getCustomerID());
+                long bookingCount = bookingRepository.countByCustomerId(existingBooking.getCustomerId());
                 if (bookingCount >= 10) {
                     discount = 0.10;
                 } else if (bookingCount >= 5) {

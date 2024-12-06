@@ -36,7 +36,7 @@ public class PaymentService implements IPaymentService {
             if(validDetails != ""){
                 throw new IllegalArgumentException(validDetails);
             }
-            if(!paymentRepository.findPaymentByBookingID(request.getBookingID()).isEmpty()){
+            if(!paymentRepository.findPaymentByBookingID(request.getBookingId()).isEmpty()){
                 throw new IllegalStateException("Payment has been processed");
             }
             final Payment paymentModel = paymentFactory.createPayment(request.getAmount(), request.bookingID(), request.getEmail(), request.getPaymentDetails());

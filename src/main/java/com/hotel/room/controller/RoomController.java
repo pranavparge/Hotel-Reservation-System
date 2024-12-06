@@ -53,16 +53,21 @@ public class RoomController {
         }
     }
 
-    @PostMapping("/customer/rooms/price")
+    @GetMapping("/customer/rooms/price")
     public ResponseEntity<?> getRoomPrice(@Valid @RequestBody RoomPriceRequest roomPriceRequest) {
         try {
-            RoomPriceResponse roomPriceResponse = roomService.getRoomPrice(roomPriceRequest);
-            return ResponseEntity.ok(roomPriceResponse);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Invalid input: " + e.getMessage());
+            RoomPriceResponse response = roomService.getRoomPrice(roomPriceRequest);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            return new ResponseEntity<>(
+                    new Error("Invalid input!", illegalArgumentException.getMessage(), HttpStatus.BAD_REQUEST.value()),
+                    HttpStatus.BAD_REQUEST
+            );
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An unexpected error occurred: " + e.getMessage());
+            return new ResponseEntity<>(
+                    new Error("Unable to fetch room prices!", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
         }
     }
 }

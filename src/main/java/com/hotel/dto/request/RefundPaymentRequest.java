@@ -9,5 +9,5 @@ public class RefundPaymentRequest {
     private String name;
 
     @NotNull(message = "BookingID is required")
-    private String bookingID;
+    private String bookingId;
 }
