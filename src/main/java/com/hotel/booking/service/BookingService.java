@@ -93,7 +93,7 @@ public class BookingService implements IBookingService {
         for (Map.Entry<RoomType, Integer> r:request.getRoomTypeToQuantity().entrySet()) {
             System.out.println("Key: " + r.getKey() + ", Value: " + r.getValue());
 
-            Integer roomBooked = bookingRepository.getBookingList(startDate, r.getKey().name());
+            Integer roomBooked = roomRepository.getRoomNotAvailable(startDate, r.getKey().name());
             Integer roomTotal = roomRepository.getRoomByType(r.getKey().name());
             Room visitor = new Room();
             if(r.getKey().name().equals("SINGLE")){
@@ -322,37 +322,5 @@ public class BookingService implements IBookingService {
         }).orElse(false);
     }
 
-    @Override
-    @Transactional
-    public String getRoomPrice(String startDate) {
-        Integer singleRoomBooked = bookingRepository.getBookingList(startDate, "SINGLE");
-        Integer doubleRoomBooked = bookingRepository.getBookingList(startDate, "DOUBLE");
-        Integer suiteRoomBooked = bookingRepository.getBookingList(startDate, "SUITE");
 
-        JSONObject jsonObject = new JSONObject();
-
-        Price singleRoom = new SingleRoomPrice();
-        Price doubleRoom = new DoubleRoomPrice();
-        Price suiteRoom = new SuiteRoomPrice();
-
-        double singlePrice = 0.0 , doublePrice = 0.0 , suitePrice = 0.0;
-
-        Integer roomSingle = roomRepository.getRoomByType("SINGLE");
-        Integer roomDouble = roomRepository.getRoomByType("DOUBLE");
-        Integer roomSuite = roomRepository.getRoomByType("SUITE");
-
-        Room visitor = new Room();
-        singleRoom.accept(visitor, roomSingle, singleRoomBooked );
-        singlePrice = visitor.getFinalPrice();
-        doubleRoom.accept(visitor, roomDouble, doubleRoomBooked);
-        doublePrice = visitor.getFinalPrice();
-        suiteRoom.accept(visitor, roomSuite, suiteRoomBooked);
-        suitePrice = visitor.getFinalPrice();
-
-        jsonObject.put("SINGLE",singlePrice);
-        jsonObject.put("DOUBLE",doublePrice);
-        jsonObject.put("SUITE",suitePrice);
-
-        return jsonObject.toString();
-    }
 }

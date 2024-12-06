@@ -96,17 +96,4 @@ public class BookingController {
         }
     }
 
-    @GetMapping("/customer/bookings/price")
-    public ResponseEntity<?> getRoomPrice(@RequestParam(value = "startDate") String startDate) {
-        try {
-            String roomPrice = bookingService.getRoomPrice(startDate);
-            if (roomPrice != null) {
-                return new ResponseEntity<>(roomPrice, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Price not found", HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>("Unable to find price!", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 }

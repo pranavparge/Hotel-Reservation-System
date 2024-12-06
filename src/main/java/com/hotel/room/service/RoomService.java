@@ -3,6 +3,9 @@ package com.hotel.room.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hotel.dto.request.RoomPriceRequest;
+import com.hotel.dto.response.RoomPriceResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import com.hotel.room.entity.*;
@@ -10,6 +13,7 @@ import com.hotel.repository.RoomRepository;
 import com.hotel.dto.request.RoomCreateRequest;
 import com.hotel.dto.response.RoomCreateResponse;
 
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,5 +47,40 @@ public class RoomService implements IRoomService {
         );
         Room newRoom = roomRepository.save(room);
         return newRoom.getRoomResponse();
+    }
+
+    @Override
+    @Transactional
+    public RoomPriceResponse getRoomPrice(RoomPriceRequest roomPriceRequest) {
+        Integer singleRoomBooked = roomRepository.getRoomNotAvailable(roomPriceRequest.getStartDate(), "SINGLE");
+        Integer doubleRoomBooked = roomRepository.getRoomNotAvailable(roomPriceRequest.getStartDate(), "DOUBLE");
+        Integer suiteRoomBooked = roomRepository.getRoomNotAvailable(roomPriceRequest.getStartDate(), "SUITE");
+
+        JSONObject jsonObject = new JSONObject();
+
+        Price singleRoom = new SingleRoomPrice();
+        Price doubleRoom = new DoubleRoomPrice();
+        Price suiteRoom = new SuiteRoomPrice();
+
+        double singlePrice = 0.0 , doublePrice = 0.0 , suitePrice = 0.0;
+
+        Integer roomSingle = roomRepository.getRoomByType("SINGLE");
+        Integer roomDouble = roomRepository.getRoomByType("DOUBLE");
+        Integer roomSuite = roomRepository.getRoomByType("SUITE");
+
+        Room visitor = new Room();
+        singleRoom.accept(visitor, roomSingle, singleRoomBooked );
+        singlePrice = visitor.getFinalPrice();
+        doubleRoom.accept(visitor, roomDouble, doubleRoomBooked);
+        doublePrice = visitor.getFinalPrice();
+        suiteRoom.accept(visitor, roomSuite, suiteRoomBooked);
+        suitePrice = visitor.getFinalPrice();
+
+        RoomPriceResponse roomPriceResponse = new RoomPriceResponse();
+        roomPriceResponse.setSingleRoomPrice(singlePrice);
+        roomPriceResponse.setDoubleRoomPrice(doublePrice);
+        roomPriceResponse.setSuiteRoomPrice(suitePrice);
+
+        return roomPriceResponse;
     }
 }

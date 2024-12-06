@@ -2,6 +2,8 @@ package com.hotel.room.controller;
 
 import java.util.List;
 
+import com.hotel.dto.request.RoomPriceRequest;
+import com.hotel.dto.response.RoomPriceResponse;
 import com.hotel.util.Error;
 import jakarta.validation.Valid;
 
@@ -48,6 +50,19 @@ public class RoomController {
                     new Error("Unable to fetch rooms!", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
                     HttpStatus.INTERNAL_SERVER_ERROR
             );
+        }
+    }
+
+    @PostMapping("/customer/rooms/price")
+    public ResponseEntity<?> getRoomPrice(@Valid @RequestBody RoomPriceRequest roomPriceRequest) {
+        try {
+            RoomPriceResponse roomPriceResponse = roomService.getRoomPrice(roomPriceRequest);
+            return ResponseEntity.ok(roomPriceResponse);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid input: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An unexpected error occurred: " + e.getMessage());
         }
     }
 }

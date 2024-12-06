@@ -44,4 +44,10 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     @Query(value = "SELECT count(*)\n" +
             "FROM hotel.room where room_type = ?",nativeQuery = true)
     Integer getRoomByType(String roomType);
+
+    @Query(value = "select count(r.room_type) from booking b join booking_total_rooms btr on b.booking_id = btr.booking_booking_id\n" +
+            "join room r on btr.total_rooms_room_number = r.room_number \n" +
+            "where cast(start_date as date) = ?1 and r.room_type = ?2",nativeQuery = true)
+    Integer getRoomNotAvailable(String startDate,String roomType);
+
 }
