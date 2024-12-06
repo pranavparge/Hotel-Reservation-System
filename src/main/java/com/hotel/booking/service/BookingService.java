@@ -119,7 +119,7 @@ public class BookingService implements IBookingService {
         booking.setEndDate(request.getEndDate());
         booking.setTotalNumberOfGuests(request.getTotalNumberOfGuests());
 
-        AdditionalServicesComponent decoratedBooking = booking;
+        IAdditionalServicesComponent decoratedBooking = booking;
 
         if (customer.getProgramType().equals(ProgramType.MEMBER)) {
             decoratedBooking = new BreakfastServiceDecorator(decoratedBooking);
@@ -249,7 +249,7 @@ public class BookingService implements IBookingService {
             Customer customer = customerRepository.findById(existingBooking.getCustomerID())
                     .orElseThrow(() -> new IllegalArgumentException("Customer not found for ID: " + existingBooking.getCustomerID()));
 
-            AdditionalServicesComponent decoratedBooking = existingBooking;
+            IAdditionalServicesComponent decoratedBooking = existingBooking;
             existingBooking.getAdditionalServices().clear();
 
             if (customer.getProgramType().equals(ProgramType.MEMBER)) {

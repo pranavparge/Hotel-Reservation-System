@@ -1,5 +1,5 @@
 package com.hotel.booking.entity;
 
-public interface AdditionalServicesComponent {
+public interface IAdditionalServicesComponent {
     double getCost();
 }

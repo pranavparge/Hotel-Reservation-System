@@ -18,7 +18,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 @Data
 @Entity
-public class Booking implements AdditionalServicesComponent {
+public class Booking implements IAdditionalServicesComponent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;

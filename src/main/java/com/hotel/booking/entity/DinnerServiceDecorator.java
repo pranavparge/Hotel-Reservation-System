@@ -1,8 +1,8 @@
 package com.hotel.booking.entity;
 
 public class DinnerServiceDecorator  extends AdditionalServicesDecorator {
-    public DinnerServiceDecorator(AdditionalServicesComponent additionalServicesComponent) {
-        super(additionalServicesComponent);
+    public DinnerServiceDecorator(IAdditionalServicesComponent IAdditionalServicesComponent) {
+        super(IAdditionalServicesComponent);
     }
     @Override
     public double getCost() {

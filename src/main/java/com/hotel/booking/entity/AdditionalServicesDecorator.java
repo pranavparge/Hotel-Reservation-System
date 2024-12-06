@@ -1,9 +1,9 @@
 package com.hotel.booking.entity;
 
-public abstract class AdditionalServicesDecorator implements AdditionalServicesComponent {
-    protected AdditionalServicesComponent additionalServices;
+public abstract class AdditionalServicesDecorator implements IAdditionalServicesComponent {
+    protected IAdditionalServicesComponent additionalServices;
 
-    public AdditionalServicesDecorator(AdditionalServicesComponent additionalServices) {
+    public AdditionalServicesDecorator(IAdditionalServicesComponent additionalServices) {
         this.additionalServices = additionalServices;
     }
     @Override
