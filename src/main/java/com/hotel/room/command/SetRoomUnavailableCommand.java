@@ -1,5 +1,6 @@
 package com.hotel.room.command;
 
+import com.hotel.enums.RoomStatus;
 import com.hotel.room.entity.Room;
 
 public class SetRoomUnavailableCommand implements RoomCommand {
@@ -11,6 +12,6 @@ public class SetRoomUnavailableCommand implements RoomCommand {
 
     @Override
     public void execute() {
-        room.setStatus("Unavailable");
+        room.setStatus(RoomStatus.UNAVAILABLE);
     }
 }

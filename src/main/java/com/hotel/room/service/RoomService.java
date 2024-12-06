@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.hotel.dto.request.RoomPriceRequest;
 import com.hotel.dto.response.RoomPriceResponse;
+import com.hotel.enums.RoomStatus;
 import com.hotel.room.command.RoomStatusInvoker;
 import com.hotel.room.command.SetRoomAvailableCommand;
 import com.hotel.room.command.SetRoomOccupiedCommand;
@@ -94,26 +95,20 @@ public class RoomService implements IRoomService {
      * @param roomNumber the room number
      * @param status     the new status
      */
-    public void updateRoomStatus(String roomNumber, String status) {
-        // Find the room by room number
+//    public void updateRoomStatus(String roomNumber, String status) {
+    public void updateRoomStatus(String roomNumber, RoomStatus status) {
         Room room = roomRepository.findByRoomNumber(roomNumber)
                 .orElseThrow(() -> new IllegalArgumentException("Room not found with number: " + roomNumber));
 
-        // Initialize the invoker
         RoomStatusInvoker invoker = new RoomStatusInvoker();
 
-        // Select the appropriate command based on status
-        switch (status.toUpperCase()) {
-            case "AVAILABLE" -> invoker.setCommand(new SetRoomAvailableCommand(room));
-            case "UNAVAILABLE" -> invoker.setCommand(new SetRoomUnavailableCommand(room));
-            case "OCCUPIED" -> invoker.setCommand(new SetRoomOccupiedCommand(room));
-            default -> throw new IllegalArgumentException("Invalid room status: " + status);
+        switch (status) {
+            case AVAILABLE -> invoker.setCommand(new SetRoomAvailableCommand(room));
+            case UNAVAILABLE -> invoker.setCommand(new SetRoomUnavailableCommand(room));
+            case OCCUPIED -> invoker.setCommand(new SetRoomOccupiedCommand(room));
         }
 
-        // Execute the command
         invoker.executeCommand();
-
-        // Save the updated room entity
         roomRepository.save(room);
     }
 }
