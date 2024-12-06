@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hotel.dto.request.PaymentRequest;
 import com.hotel.dto.response.PaymentResponse;
-import com.hotel.payment.service.PaymentService;
+import com.hotel.payment.service.IPaymentService;
 
 import com.hotel.util.Error;
 
@@ -24,13 +24,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PaymentController {
     @Autowired
-    private PaymentService paymentService;
+    private IPaymentService IPaymentService;
     
     @PostMapping("/pay")
     public ResponseEntity<?> processPayment(@RequestBody Map<String,Object> data) {
         try {
             PaymentRequest request = new PaymentRequest(data);
-            PaymentResponse response = paymentService.processPayment(request);
+            PaymentResponse response = IPaymentService.processPayment(request);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         catch(IllegalArgumentException exception){
@@ -51,7 +51,7 @@ public class PaymentController {
     public ResponseEntity<?> refundPayment(@RequestBody Map<String, Object> data) {
         try {
             String bookingid = data.get("id").toString();
-            PaymentResponse response = paymentService.refundPayment(bookingid);
+            PaymentResponse response = IPaymentService.refundPayment(bookingid);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         catch(IllegalArgumentException exception){

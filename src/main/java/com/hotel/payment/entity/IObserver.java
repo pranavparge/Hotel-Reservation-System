@@ -1,5 +1,5 @@
 package com.hotel.payment.entity;
 
-public interface Observer {
+public interface IObserver {
     void update(Payment paymentModel, String message);
 }

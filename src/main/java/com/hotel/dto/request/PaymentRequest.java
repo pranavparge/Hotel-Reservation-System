@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 import com.hotel.enums.PaymentMethod;
 import com.hotel.payment.entity.CardPaymentDetails;
-import com.hotel.payment.entity.PaymentDetails;
+import com.hotel.payment.entity.IPaymentDetails;
 import com.hotel.payment.entity.PaypalPaymentDetails;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
@@ -33,12 +33,12 @@ public class PaymentRequest {
     private PaymentMethod paymentMethod;
     @Enumerated
     @NotNull(message = "Payment details are required")
-    private PaymentDetails paymentDetails;
+    private IPaymentDetails paymentDetails;
 
     private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
 
 
-    private PaymentDetails setPaymentDetails(Map<String, Object> data, PaymentMethod method) {
+    private IPaymentDetails setPaymentDetails(Map<String, Object> data, PaymentMethod method) {
         switch (method) {
             case CARD:
                 return new CardPaymentDetails(data); // Constructor for CardPaymentDetails
@@ -76,7 +76,7 @@ public class PaymentRequest {
         return this.bookingID;
     }
 
-    public PaymentDetails getPaymentDetails(){
+    public IPaymentDetails getPaymentDetails(){
         return this.paymentDetails;
     }
 

@@ -14,7 +14,7 @@ import com.hotel.dto.request.PaymentRequest;
 import com.hotel.dto.response.PaymentResponse;
 import com.hotel.enums.PaymentMethod;
 import com.hotel.repository.PaymentRepository;
-import com.hotel.payment.service.PaymentService;
+import com.hotel.payment.service.IPaymentService;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class PaymentTests {
     @Autowired
-    private PaymentService paymentService;
+    private IPaymentService IPaymentService;
 
     @Autowired
     private PaymentRepository paymentRepository;
@@ -73,7 +73,7 @@ public class PaymentTests {
        //       }
        //   }
        PaymentRequest paymentRequest = new PaymentRequest(createPaymentRequest(PaymentMethod.CARD));
-       PaymentResponse response = paymentService.processPayment(paymentRequest);
+       PaymentResponse response = IPaymentService.processPayment(paymentRequest);
        System.out.println("response "+ response.toString());
        assertNotNull(response);
 //        assertTrue(response.getResult());

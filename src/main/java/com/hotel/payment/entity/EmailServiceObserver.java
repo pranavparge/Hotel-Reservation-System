@@ -6,7 +6,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmailServiceObserver implements Observer{
+public class EmailServiceObserver implements IObserver {
     @Autowired
     private JavaMailSender mailSender;
 

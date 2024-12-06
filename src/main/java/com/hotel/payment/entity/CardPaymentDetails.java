@@ -2,7 +2,7 @@ package com.hotel.payment.entity;
 
 import java.util.Map;
 
-public class CardPaymentDetails implements PaymentDetails {
+public class CardPaymentDetails implements IPaymentDetails {
     private String cardNumber;
     private String expiry;
     private String cvv;

@@ -13,8 +13,6 @@ import com.hotel.enums.PaymentStatus;
 // import com.hotel.enums.PaymentMethod;
 // import com.hotel.enums.PaymentStatus;
 
-
-
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Payment {
@@ -40,7 +38,6 @@ public abstract class Payment {
 
     @Transient
     public String customerEmail;
-    
 
     public Payment(String bookingID, String customerEmail, Double amount, PaymentMethod paymentMethod) {
         this.amount = amount;
@@ -61,5 +58,3 @@ public abstract class Payment {
     public abstract PaymentResponse notifyPayment(PaymentNotifier notifier);
     public abstract PaymentResponse notifyRefund(PaymentNotifier notifier);
 }
-
-

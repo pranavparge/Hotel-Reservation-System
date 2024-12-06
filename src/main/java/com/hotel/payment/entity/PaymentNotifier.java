@@ -6,24 +6,24 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PaymentNotifier implements Subjects {
-    private final List<Observer> observers = new ArrayList<>();
+public class PaymentNotifier implements ISubjects {
+    private final List<IObserver> IObservers = new ArrayList<>();
 
 
     @Override
-    public void attach(Observer observer) {
-        observers.add(observer);
+    public void attach(IObserver IObserver) {
+        IObservers.add(IObserver);
     }
 
     @Override
-    public void detach(Observer observer) {
-        observers.remove(observer);
+    public void detach(IObserver IObserver) {
+        IObservers.remove(IObserver);
     }
 
     @Override
     public void notifyObservers(Payment paymentModel, String message) {
-       for (Observer observer : observers) {
-            observer.update(paymentModel, message);
+       for (IObserver IObserver : IObservers) {
+            IObserver.update(paymentModel, message);
        }
     }
     

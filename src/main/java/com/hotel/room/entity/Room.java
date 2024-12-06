@@ -9,7 +9,7 @@ import com.hotel.dto.response.RoomCreateResponse;
 
 @Data
 @Entity
-public class Room implements RoomVisitor{
+public class Room implements IRoomVisitor {
     @Id
     private String roomNumber;
     private int roomCapacity;

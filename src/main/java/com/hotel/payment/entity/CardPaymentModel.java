@@ -55,7 +55,7 @@ public class CardPaymentModel extends Payment{
 
     @Override
     public PaymentResponse notifyPayment(PaymentNotifier notifier){
-        //Observer logic here
+        //IObserver logic here
         notifier.notifyObservers(this, status.paymentstatusResponse()+" via "+paymentMethod.methodResponse());
         return new PaymentResponse(status.paymentstatusResponse()+" via "+paymentMethod.methodResponse(), status.paymentstatusResponse(), status.statusResult());
     }

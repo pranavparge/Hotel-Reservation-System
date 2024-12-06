@@ -26,6 +26,6 @@ public class Price implements IPrice {
         return roomType;
     }
 
-    public void accept(RoomVisitor visitor, double availabilityPercentage, Integer roomBooked) {}
+    public void accept(IRoomVisitor visitor, double availabilityPercentage, Integer roomBooked) {}
 
 }

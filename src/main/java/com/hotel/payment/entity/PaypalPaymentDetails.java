@@ -2,7 +2,7 @@ package com.hotel.payment.entity;
 
 import java.util.Map;
 
-public class PaypalPaymentDetails implements PaymentDetails{
+public class PaypalPaymentDetails implements IPaymentDetails {
     private String paypalID;
 
     public PaypalPaymentDetails(Map<String, Object> data){

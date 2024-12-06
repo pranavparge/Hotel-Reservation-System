@@ -1,6 +1,6 @@
 package com.hotel.room.entity;
 
-public interface RoomVisitor {
+public interface IRoomVisitor {
 
     void visit(SingleRoomPrice singleRoomPrice, double totalRoom, double roomBooked);
     void visit(DoubleRoomPrice doubleRoomPrice, double totalRoom, double roomBooked);

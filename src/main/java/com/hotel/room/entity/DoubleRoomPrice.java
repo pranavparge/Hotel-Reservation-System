@@ -10,7 +10,7 @@ public class DoubleRoomPrice extends Price {
     }
 
     @Override
-    public void accept(RoomVisitor visitor, double totalRoom, Integer roomBooked) {
+    public void accept(IRoomVisitor visitor, double totalRoom, Integer roomBooked) {
         visitor.visit(this, totalRoom, roomBooked);
     }
 }
