@@ -6,6 +6,7 @@ import com.hotel.dto.request.RoomPriceRequest;
 import com.hotel.dto.response.RoomCreateResponse;
 import com.hotel.dto.response.RoomPriceResponse;
 import com.hotel.enums.ProgramType;
+import com.hotel.enums.RoomStatus;
 import com.hotel.enums.RoomType;
 import com.hotel.repository.CustomerRepository;
 import com.hotel.repository.StaffRepository;
@@ -71,8 +72,8 @@ public class RoomControllerTest {
         when(jwtUtility.extractUsername(anyString())).thenReturn("staff@gmail.com");
         when(jwtUtility.extractRole(anyString())).thenReturn("STAFF");
 
-        RoomCreateRequest request = new RoomCreateRequest("1", 2, RoomType.SINGLE.toString(), "AVAILABLE");
-        RoomCreateResponse response = new RoomCreateResponse("1", 2, RoomType.SINGLE, 100.0);
+        RoomCreateRequest request = new RoomCreateRequest("1", 2, RoomType.SINGLE.toString(), RoomStatus.AVAILABLE.toString());
+        RoomCreateResponse response = new RoomCreateResponse("1", 2, RoomType.SINGLE, 100.0, RoomStatus.AVAILABLE);
 
         when(roomService.createRoom(any(RoomCreateRequest.class))).thenReturn(response);
 
@@ -131,8 +132,8 @@ public class RoomControllerTest {
         when(jwtUtility.extractUsername(anyString())).thenReturn("customer@gmail.com");
         when(jwtUtility.extractRole(anyString())).thenReturn("CUSTOMER");
 
-        RoomCreateResponse room1 = new RoomCreateResponse("1", 2, RoomType.SINGLE, 100.0);
-        RoomCreateResponse room2 = new RoomCreateResponse("2", 2, RoomType.DOUBLE, 150.0);
+        RoomCreateResponse room1 = new RoomCreateResponse("1", 2, RoomType.SINGLE, 100.0, RoomStatus.AVAILABLE);
+        RoomCreateResponse room2 = new RoomCreateResponse("2", 2, RoomType.DOUBLE, 150.0, RoomStatus.AVAILABLE);
 
         when(roomService.viewRooms()).thenReturn(Arrays.asList(room1, room2));
 
