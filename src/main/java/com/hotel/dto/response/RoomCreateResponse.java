@@ -1,5 +1,6 @@
 package com.hotel.dto.response;
 
+import com.hotel.enums.RoomStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import com.hotel.enums.RoomType;
@@ -13,4 +14,5 @@ public class RoomCreateResponse {
     private int roomCapacity;
     private RoomType roomType;
     private Double roomPrice;
+    private RoomStatus roomStatus;
 }
