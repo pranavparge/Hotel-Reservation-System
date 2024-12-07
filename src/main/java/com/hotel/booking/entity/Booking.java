@@ -1,6 +1,7 @@
 package com.hotel.booking.entity;
 
 import com.hotel.dto.response.RoomCreateResponse;
+import com.hotel.enums.RoomStatus;
 import lombok.Data;
 
 import java.util.Date;
@@ -66,6 +67,7 @@ public class Booking implements IAdditionalServicesComponent {
                     roomResponse.setRoomCapacity(room.getRoomCapacity());
                     roomResponse.setRoomType(room.getRoomType());
                     roomResponse.setRoomPrice(room.getRoomPrice());
+                    roomResponse.setRoomStatus(RoomStatus.AVAILABLE);
                     return roomResponse;
                 })
                 .collect(Collectors.toList());
