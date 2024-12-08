@@ -6,7 +6,7 @@ name: Build and deploy JAR app to Azure Web App - hotel-reservation-system
 on:
   push:
     branches:
-      - master
+      - beta
   workflow_dispatch:
 
 jobs:
