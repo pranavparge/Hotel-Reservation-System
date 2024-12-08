@@ -2,6 +2,9 @@ package com.hotel.payment.entity;
 
 import java.util.Map;
 
+/// Payment details implementing the payment details
+/// Details correspond to the specifications of card payment details that are required
+/// Helps create the corresponding [CardPaymentModel].
 public class CardPaymentDetails implements IPaymentDetails {
     private String cardNumber;
     private String expiry;
@@ -19,7 +22,7 @@ public class CardPaymentDetails implements IPaymentDetails {
     public void showPaymentDetails(){
         System.out.println("My Card details");
     }
-
+    
     @Override
     public Payment createPaymentModel(double amount, String bookingID, String customerEmail){
         CardPaymentModel model = new CardPaymentModel(bookingID, customerEmail, amount, cardNumber);

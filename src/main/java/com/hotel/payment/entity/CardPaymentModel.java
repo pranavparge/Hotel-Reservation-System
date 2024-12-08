@@ -11,8 +11,18 @@ import jakarta.persistence.Transient;
 @Entity
 @DiscriminatorValue("CARD")
 public class CardPaymentModel extends Payment{
+    /// The card number provided in the requests.
     @Transient
     private String cardNumber;
+    /// The card name provided in the requests.
+    @Transient
+    private String cardName;
+    /// The card cvv provided in the requests.
+    @Transient
+    private String cvv;
+    /// The expiry of the card provided in the requests.
+    @Transient
+    private String expiry;
 
     public CardPaymentModel(String bookingID, String customerEmail, Double amount, String cardNumber){
         super(bookingID, customerEmail, amount, PaymentMethod.CARD);
@@ -24,12 +34,16 @@ public class CardPaymentModel extends Payment{
     }
 
 
+    /// Based on the details provided we can process the payments.
+    /// We can utilise different packages to enable the card payments.
     @Override
     public void processPayment(){
         System.out.println("Payment processed via card" + bookingId + " "+ customerEmail);
         this.status = PaymentStatus.DONE;
     }
 
+    /// Based on the [bookingId] provided we process the refund.
+    /// In case of [PaymentMethod.CARD] payments based on the service-provider to deduct the charges incurred accoridingly and refund the appropriate refunds.
     @Override
     public void refundPayment() {
         this.paymentMethod = PaymentMethod.CARD;

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.hotel.payment.entity.Payment;
 
+/// Repository for all payment interactions made to SQL
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long>{
     @Query("select p from Payment p where p.bookingId = ?1")

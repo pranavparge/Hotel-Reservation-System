@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 @Entity
 @DiscriminatorValue("PAYPAL")
 public class PaypalPaymentModel extends Payment{
+    /// The paypal id via which the paypal wallet payments/refunds would be made.
     @Transient
     private String paypalID;
 
@@ -21,12 +22,16 @@ public class PaypalPaymentModel extends Payment{
         super("", "", 0.0, PaymentMethod.PAYPAL);
     }
 
+    /// Process the payments via Paypal
+    /// We can utilise any Paypal package for Java spring to successfully complete the payment end-to-end.
     @Override
     public void processPayment(){
         System.out.println("Payment processed via paypal");
         this.status = PaymentStatus.DONE;
     }
 
+    /// Process the refunds for the paypal payments.
+    /// Make the appropriate refunds based on the business conditionsa and requirements.
     @Override
     public void refundPayment() {
         this.paymentMethod = PaymentMethod.PAYPAL;

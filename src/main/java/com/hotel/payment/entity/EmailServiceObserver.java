@@ -5,13 +5,18 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+/// The Email notification observer implemented from the notification observer
+/// Responsible to send email notifications about customer payments and refunds
 @Component
 public class EmailServiceObserver implements IObserver {
+    /// Java mail sender package
     @Autowired
     private JavaMailSender mailSender;
 
+    /// The email id used to send the email addresses.
     private static String emailAddress = "hotereservation7@gmail.com";
 
+    /// The method responsible to send notifications
     @Override
     public void update(Payment paymentModel, String message) {
         System.out.println(paymentModel.customerEmail + " " + paymentModel.bookingId);
@@ -19,6 +24,9 @@ public class EmailServiceObserver implements IObserver {
         sendEmail(paymentModel.customerEmail, message);
     }
 
+    /// The method responsible to carry out the task of sending the email
+    /// Leverages Gmail SMTP service
+    /// Additional information in application.properties
     private void sendEmail(String email, String msg){
         try {
             SimpleMailMessage message = new SimpleMailMessage();

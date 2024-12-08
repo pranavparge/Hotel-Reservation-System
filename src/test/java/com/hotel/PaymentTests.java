@@ -1,99 +1,153 @@
 package com.hotel;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.hotel.payment.controller.PaymentController;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hotel.dto.request.PaymentRequest;
 import com.hotel.dto.response.PaymentResponse;
-import com.hotel.enums.PaymentMethod;
-import com.hotel.repository.PaymentRepository;
-import com.hotel.payment.service.IPaymentService;
+import com.hotel.payment.service.PaymentService;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+/// Test class for Payment  Service
 public class PaymentTests {
-    @Autowired
-    private IPaymentService IPaymentService;
+    /// Inistialisation of payment service
+    @MockBean
+    private PaymentService paymentService;
 
-    @Autowired
-    private PaymentRepository paymentRepository;
-
-    @Autowired
-    private PaymentController paymentController;
 
     @Autowired
     private MockMvc mockMvc;
 
-    private Map<String, Object> createPaymentDetailsObjectCard(String cardNumber, String cardName, String expiry, String cvv){
-        Map<String, Object> result = new HashMap<String, Object>();
-        result.put("cardNumber", cardNumber);
-        result.put("cardName", cardName);
-        result.put("expiry", expiry);
-        result.put("cvv", cvv);
-        return result;
-    }
-
-    private Map<String, Object> createPaymentDetailsObjectPaypal(String paypalID){
-        Map<String, Object> result = new HashMap<String, Object>();
-        result.put("id", paypalID);
-        return result;
-    }
-
-    private Map<String, Object> createPaymentRequest(PaymentMethod method){
-        Map<String, Object> result = new HashMap<String, Object>();
-        result.put("bookingID", "2112");
-        result.put("amount", 120.0);
-        result.put("customerEmail", "customer@gmail.com");
-        result.put("details", (method == PaymentMethod.CARD)?createPaymentDetailsObjectCard("123-456-789", "Customer", "12/25", "123"):createPaymentDetailsObjectPaypal("123#245"));
-        result.put("paymentMethod", (method == PaymentMethod.CARD)?"Card":"Paypal");
-        return result;
-    }
-
-   @Test
-   void testProcessPayment() {
-       // {
-       //     "bookingID": "2123",
-       //     "amount": 120.0,
-       //     "customerEmail": "customer@gmail.com",
-       //     "paymentMethod": "Paypal",
-       //     "details": {
-       //       "paypalID": "1234567812345678"
-       //       }
-       //   }
-       PaymentRequest paymentRequest = new PaymentRequest(createPaymentRequest(PaymentMethod.CARD));
-       PaymentResponse response = IPaymentService.processPayment(paymentRequest);
-       System.out.println("response "+ response.toString());
-       assertNotNull(response);
-//        assertTrue(response.getResult());
-//        assertEquals("Payment Successfull", response.getStatus());
-   }
-
+    /// Method to test the card payment requests.
     @Test
-    void testPaymentEndpoint(){
-        String requestBody = "{ \"bookingID\": \"B123\", \"amount\": 100.0, \"paymentMethod\": \"Paypal\", \"details\": {\"paypalID\": \"1234-5678-9876\"}}";
+    void testCardPaymentEndpoint() throws Exception {
 
-        try {
-            mockMvc.perform(post("/payment/pay")
-                    // .accept(MediaType.APPLICATION_JSON).headers(HttpHeaders.AUTHORIZATION=)
-                    .content(requestBody))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.result").value(true));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        PaymentResponse response = new PaymentResponse("Payment successfull via Card", "Payment successfull", true);
+
+        Mockito.when(paymentService.processPayment(any(PaymentRequest.class))).thenReturn(response);
+
+        String cardPaymentRequest = "{\"bookingId\":\"2123\",\"amount\":120.0,\"customerEmail\":\"customer@gmail.com\",\"paymentMethod\":\"Card\",\"details\":{\"cardNumber\":\"1234567812345678\",\"cardName\":\"abc\",\"expiry\":\"12/25\",\"cvv\":\"123\"}}"
+;
+
+        mockMvc.perform(post("/customer/pay")
+                .header("Authorization", "Bearer "+jwtToken())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(cardPaymentRequest))
+                .andExpect(status().isOk()) // Expect 200 OK
+                .andExpect(jsonPath("$.result").value(true)) 
+                .andExpect(jsonPath("$.status").value("Payment successfull")) 
+                .andExpect(jsonPath("$.message").value("Payment successfull via Card")) 
+                .andExpect(jsonPath("$.timeStamp").exists()); 
     }
+
+    /// Method to test the wallet (Paypal) payment requests.
+    @Test
+    void testWalletPaymentEndpoint() throws Exception {
+
+        PaymentResponse response = new PaymentResponse("Payment successfull via Paypal", "Payment successfull", true);
+
+        Mockito.when(paymentService.processPayment(any(PaymentRequest.class))).thenReturn(response);
+
+        String cardPaymentRequest = "{\"bookingId\":\"2124\",\"amount\":120.0,\"customerEmail\":\"customer@gmail.com\",\"paymentMethod\":\"Paypal\",\"details\":{\"paypalID\":\"1234567812345678\"}}"
+;
+
+        mockMvc.perform(post("/customer/pay")
+                .header("Authorization", "Bearer "+jwtToken())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(cardPaymentRequest))
+                .andExpect(status().isOk()) // Expect 200 OK
+                .andExpect(jsonPath("$.result").value(true)) 
+                .andExpect(jsonPath("$.status").value("Payment successfull")) 
+                .andExpect(jsonPath("$.message").value("Payment successfull via Paypal")) 
+                .andExpect(jsonPath("$.timeStamp").exists()); 
+    }
+
+    /// Method to test the card refund payment requests.
+    @Test
+    void testCardRefundEndpoint() throws Exception {
+
+        PaymentResponse response = new PaymentResponse("Refund processed successfully via Card", "Refund processed successfully", true);
+
+        Mockito.when(paymentService.refundPayment(any(String.class))).thenReturn(response);
+
+        String cardRefundRequest = "{\"id\":\"2123\"}"
+;
+
+        mockMvc.perform(post("/customer/refund")
+                .header("Authorization", "Bearer "+jwtToken())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(cardRefundRequest))
+                .andExpect(status().isOk()) // Expect 200 OK
+                .andExpect(jsonPath("$.result").value(true)) 
+                .andExpect(jsonPath("$.status").value("Refund processed successfully")) 
+                .andExpect(jsonPath("$.message").value("Refund processed successfully via Card")) 
+                .andExpect(jsonPath("$.timeStamp").exists()); 
+    }
+
+    /// Method to test the wallet (Paypal) refund requests.
+    @Test
+    void testWalletRefundEndpoint() throws Exception {
+
+        PaymentResponse response = new PaymentResponse("Refund processed successfully via Paypal", "Refund processed successfully", true);
+
+        Mockito.when(paymentService.refundPayment(any(String.class))).thenReturn(response);
+
+        String paypalRefundRequest = "{\"id\":\"2124\"}"
+;
+
+        mockMvc.perform(post("/customer/refund")
+                .header("Authorization", "Bearer "+jwtToken())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(paypalRefundRequest))
+                .andExpect(status().isOk()) // Expect 200 OK
+                .andExpect(jsonPath("$.result").value(true)) 
+                .andExpect(jsonPath("$.status").value("Refund processed successfully")) 
+                .andExpect(jsonPath("$.message").value("Refund processed successfully via Paypal")) 
+                .andExpect(jsonPath("$.timeStamp").exists()); 
+    }
+
+    /// Method to generate the JWT token required for authentication
+    public AtomicReference<String> jwtToken() throws Exception {
+       AtomicReference<String> jwtToken = new AtomicReference<>("");
+
+       String jsonPayload = "{ \"email\": \"customer@gmail.com\", \"password\": \"customer@123\" }";
+
+       mockMvc.perform(post("/auth/customer/sign-in")
+                       .contentType("application/json")
+                       .content(jsonPayload))
+               .andExpect(status().isOk()) 
+               .andExpect(jsonPath("$.jwt").exists())
+               .andDo(result -> {
+                   String responseBody = result.getResponse().getContentAsString();
+                   ObjectMapper objectMapper = new ObjectMapper();
+                   JsonNode responseJson = objectMapper.readTree(responseBody);
+
+                   jwtToken.set(responseJson.get("jwt").asText());
+
+                   System.out.println("Extracted JWT Token: " + jwtToken);
+               });
+
+       return jwtToken;
+
+    }
+
+
 
 }
 
