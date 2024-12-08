@@ -8,7 +8,13 @@ import com.hotel.dto.request.BookingCreateRequest;
 import com.hotel.dto.request.BookingUpdateRequest;
 import com.hotel.dto.response.BookingCreateResponse;
 import com.hotel.dto.response.RoomCreateResponse;
+import com.hotel.enums.ProgramType;
 import com.hotel.enums.RoomType;
+import com.hotel.repository.CustomerRepository;
+import com.hotel.repository.StaffRepository;
+import com.hotel.user.entity.Customer;
+import com.hotel.user.entity.Staff;
+import com.hotel.util.JwtUtility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,6 +25,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -27,8 +34,8 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -40,6 +47,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class BookingTests {
 
+    @MockBean
+    private CustomerRepository customerRepository;
+
+    @MockBean
+    private StaffRepository staffRepository;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -48,8 +61,26 @@ public class BookingTests {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @MockBean
+    private JwtUtility jwtUtility;
+
+    @BeforeEach
+    public void setupMocks() {
+        when(customerRepository.findFirstByEmail("customer@gmail.com")).thenReturn(Optional.of(
+                new Customer(ProgramType.MEMBER, "CustomerName", "customer@gmail.com", "{noop}password")
+        ));
+        when(staffRepository.findFirstByEmail("staff@gmail.com")).thenReturn(Optional.of(
+                new Staff("StaffName", "staff@gmail.com", "{noop}password")
+        ));
+    }
+
     @Test
     public void testCreateBooking_Success() throws Exception {
+
+        when(jwtUtility.isTokenValid(anyString(), any(UserDetails.class))).thenReturn(true);
+        when(jwtUtility.extractUsername(anyString())).thenReturn("customer@gmail.com");
+        when(jwtUtility.extractRole(anyString())).thenReturn("CUSTOMER");
+
         // Prepare the mock response
         BookingCreateResponse bookingCreateResponse = new BookingCreateResponse();
         bookingCreateResponse.setBookingId(1L);
@@ -89,7 +120,7 @@ public class BookingTests {
 
         // Perform the POST request and validate the response
         mockMvc.perform(post("/customer/bookings/create")
-                        .header("Authorization", "Bearer "+jwtToken())
+                        .header("Authorization", "Bearer mockedToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
                 .andExpect(status().isOk())
@@ -109,6 +140,11 @@ public class BookingTests {
 
     @Test
     public void testViewBookingById_Success() throws Exception {
+
+        when(jwtUtility.isTokenValid(anyString(), any(UserDetails.class))).thenReturn(true);
+        when(jwtUtility.extractUsername(anyString())).thenReturn("staff@gmail.com");
+        when(jwtUtility.extractRole(anyString())).thenReturn("STAFF");
+
         // Prepare mock data
         BookingCreateResponse bookingCreateResponse = new BookingCreateResponse();
         bookingCreateResponse.setBookingId(1L);
@@ -133,7 +169,7 @@ public class BookingTests {
         // Perform the GET request
         mockMvc.perform(get("/staff/bookings")
                         .param("bookingID", "1")
-                        .header("Authorization", "Bearer "+jwtTokenStaff())
+                        .header("Authorization", "Bearer mockedToken")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.bookingId").value(1))
@@ -150,6 +186,11 @@ public class BookingTests {
 
     @Test
     public void testUpdateBooking_Success() throws Exception {
+
+        when(jwtUtility.isTokenValid(anyString(), any(UserDetails.class))).thenReturn(true);
+        when(jwtUtility.extractUsername(anyString())).thenReturn("staff@gmail.com");
+        when(jwtUtility.extractRole(anyString())).thenReturn("STAFF");
+
         // Mock data
         BookingUpdateRequest updateRequest = new BookingUpdateRequest();
         updateRequest.setStartDate(new SimpleDateFormat("yyyy-MM-dd").parse("2024-12-01"));
@@ -182,7 +223,7 @@ public class BookingTests {
         // Perform PUT request
         mockMvc.perform(put("/staff/bookings/update")
                         .param("bookingID", "1")
-                        .header("Authorization", "Bearer "+jwtTokenStaff())
+                        .header("Authorization", "Bearer mockedToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isOk())
@@ -196,6 +237,11 @@ public class BookingTests {
 
     @Test
     void testDeleteBookingSuccess() throws Exception {
+
+        when(jwtUtility.isTokenValid(anyString(), any(UserDetails.class))).thenReturn(true);
+        when(jwtUtility.extractUsername(anyString())).thenReturn("staff@gmail.com");
+        when(jwtUtility.extractRole(anyString())).thenReturn("STAFF");
+
         Long bookingId = 1L;
 
         // Mock service behavior
@@ -204,77 +250,10 @@ public class BookingTests {
         // Perform the DELETE request and validate
         mockMvc.perform(delete("/staff/bookings/delete")
                         .param("bookingID", bookingId.toString())
-                        .header("Authorization", "Bearer "+jwtTokenStaff())
+                        .header("Authorization", "Bearer mockedToken")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Booking deleted successfully"));
-    }
-
-
-    public AtomicReference<String> jwtToken() throws Exception {
-        AtomicReference<String> jwtToken = new AtomicReference<>("");
-
-        String jsonPayload = "{ \"email\": \"customer@gmail.com\", \"password\": \"customer@123\" }";
-
-        // Perform the POST request to the sign-in endpoint
-        mockMvc.perform(post("/auth/customer/sign-in")
-                        .contentType("application/json")
-                        .content(jsonPayload))
-                .andExpect(status().isOk()) // Expecting HTTP 200 OK
-                .andExpect(jsonPath("$.jwt").exists()) // Ensure the JWT token is present
-                .andDo(result -> {
-                    // Extract the response body as a string
-                    String responseBody = result.getResponse().getContentAsString();
-
-                    // Create an ObjectMapper to parse the response body
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    JsonNode responseJson = objectMapper.readTree(responseBody);
-
-                    // Extract the JWT token from the response
-                    jwtToken.set(responseJson.get("jwt").asText());
-
-                    // Print or use the token as needed
-                    System.out.println("Extracted JWT Token: " + jwtToken);
-
-                    // You can store this JWT token if you need to use it for other requests
-                    // For example, save it for future requests or further assertions
-                });
-
-        return jwtToken;
-
-    }
-
-    public AtomicReference<String> jwtTokenStaff() throws Exception {
-        AtomicReference<String> jwtToken = new AtomicReference<>("");
-
-        String jsonPayload = "{ \"email\": \"staff@gmail.com\", \"password\": \"staff@123\" }";
-
-        // Perform the POST request to the sign-in endpoint
-        mockMvc.perform(post("/auth/staff/sign-in")
-                        .contentType("application/json")
-                        .content(jsonPayload))
-                .andExpect(status().isOk()) // Expecting HTTP 200 OK
-                .andExpect(jsonPath("$.jwt").exists()) // Ensure the JWT token is present
-                .andDo(result -> {
-                    // Extract the response body as a string
-                    String responseBody = result.getResponse().getContentAsString();
-
-                    // Create an ObjectMapper to parse the response body
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    JsonNode responseJson = objectMapper.readTree(responseBody);
-
-                    // Extract the JWT token from the response
-                    jwtToken.set(responseJson.get("jwt").asText());
-
-                    // Print or use the token as needed
-                    System.out.println("Extracted JWT Token: " + jwtToken);
-
-                    // You can store this JWT token if you need to use it for other requests
-                    // For example, save it for future requests or further assertions
-                });
-
-        return jwtToken;
-
     }
 
 }
