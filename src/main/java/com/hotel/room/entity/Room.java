@@ -1,5 +1,6 @@
 package com.hotel.room.entity;
 
+import com.hotel.enums.RoomStatus;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -19,6 +20,8 @@ public class Room implements IRoomVisitor {
     private double flatRoomPrice;
     @Transient
     private RoomType flatRoomType;
+    @Enumerated(EnumType.STRING)
+    private RoomStatus status;
 
     public Room() {}
 
@@ -26,6 +29,7 @@ public class Room implements IRoomVisitor {
         this.roomNumber = roomNumber;
         this.roomCapacity = roomCapacity;
         this.roomPrice = roomPrice;
+        this.status = RoomStatus.AVAILABLE;
     }
 
     public RoomType getRoomType() {
@@ -42,6 +46,7 @@ public class Room implements IRoomVisitor {
         response.setRoomCapacity(getRoomCapacity());
         response.setRoomType(getRoomType());
         response.setRoomPrice(getRoomPrice());
+        response.setRoomStatus(getStatus());
         return response;
     }
 

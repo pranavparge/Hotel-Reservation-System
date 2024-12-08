@@ -5,6 +5,11 @@ import java.util.stream.Collectors;
 
 import com.hotel.dto.request.RoomPriceRequest;
 import com.hotel.dto.response.RoomPriceResponse;
+import com.hotel.enums.RoomStatus;
+import com.hotel.room.command.RoomStatusInvoker;
+import com.hotel.room.command.SetRoomAvailableCommand;
+import com.hotel.room.command.SetRoomOccupiedCommand;
+import com.hotel.room.command.SetRoomUnavailableCommand;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -79,5 +84,28 @@ public class RoomService implements IRoomService {
         roomPriceResponse.setSuiteRoomPrice(suitePrice);
 
         return roomPriceResponse;
+    }
+
+    /**
+     * Update the status of a room.
+     *
+     * @param roomNumber the room number
+     * @param status     the new status
+     */
+//    public void updateRoomStatus(String roomNumber, String status) {
+    public void updateRoomStatus(String roomNumber, RoomStatus status) {
+        Room room = roomRepository.findByRoomNumber(roomNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Room not found with number: " + roomNumber));
+
+        RoomStatusInvoker invoker = new RoomStatusInvoker();
+
+        switch (status) {
+            case AVAILABLE -> invoker.setCommand(new SetRoomAvailableCommand(room));
+            case UNAVAILABLE -> invoker.setCommand(new SetRoomUnavailableCommand(room));
+            case OCCUPIED -> invoker.setCommand(new SetRoomOccupiedCommand(room));
+        }
+
+        invoker.executeCommand();
+        roomRepository.save(room);
     }
 }
