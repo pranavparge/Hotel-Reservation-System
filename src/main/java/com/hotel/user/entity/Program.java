@@ -1,7 +1,7 @@
 package com.hotel.user.entity;
 
-import com.hotel.enums.ProgramType;
 import lombok.Data;
+import com.hotel.enums.ProgramType;
 
 @Data
 public abstract class Program {
@@ -10,6 +10,4 @@ public abstract class Program {
     public Program(ProgramType programName) {
         this.programName = programName;
     }
-
-    public abstract String getProgramBenefits();
 }
