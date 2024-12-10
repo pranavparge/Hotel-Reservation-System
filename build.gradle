@@ -47,6 +47,12 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-// tasks.named('bootJar') {
-//     enabled = true
-// }
+
+bootJar {
+    manifest {
+        attributes(
+            'Main-Class': 'com.hotel.HotelReservationSystemApplication'
+        )
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}

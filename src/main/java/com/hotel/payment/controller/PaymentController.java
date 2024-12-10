@@ -33,14 +33,16 @@ public class PaymentController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         catch(IllegalArgumentException exception){
+            PaymentResponse response = new PaymentResponse("Invalid payment request!", "Payment failure!", false);
             return new ResponseEntity<>(
-                    new Error("Invalid payment request!", exception.getMessage(), HttpStatus.BAD_REQUEST.value()),
+                    response,
                     HttpStatus.BAD_REQUEST
             );
         } 
         catch (Exception e) {
+            PaymentResponse response = new PaymentResponse(e.getMessage(), "Payment failure!", false);
             return new ResponseEntity<>(
-                    new Error("Payment failure!", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                    response,
                     HttpStatus.INTERNAL_SERVER_ERROR
             );
         }
@@ -54,14 +56,16 @@ public class PaymentController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         catch(IllegalArgumentException exception){
+            PaymentResponse response = new PaymentResponse("Invalid payment refund request!", "Payment refund failure!", false);
             return new ResponseEntity<>(
-                    new Error("Invalid payment refund request!", exception.getMessage(), HttpStatus.BAD_REQUEST.value()),
+                    response,
                     HttpStatus.BAD_REQUEST
             );
         } 
         catch (Exception e) {
+            PaymentResponse response = new PaymentResponse(e.getMessage(), "Payment refund failure!", false);
             return new ResponseEntity<>(
-                    new Error("Payment refund failure!", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                    response,
                     HttpStatus.INTERNAL_SERVER_ERROR
             );
         }
