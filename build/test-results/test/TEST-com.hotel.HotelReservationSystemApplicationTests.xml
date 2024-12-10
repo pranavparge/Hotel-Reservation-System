@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.hotel.HotelReservationSystemApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-12-08T15:08:17" hostname="Parths-MacBook-Pro-2.local" time="0.001">
+  <properties/>
+  <testcase name="contextLoads()" classname="com.hotel.HotelReservationSystemApplicationTests" time="0.001"/>
+  <system-out><![CDATA[2024-12-08T15:08:16.422Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.hotel.HotelReservationSystemApplicationTests]: HotelReservationSystemApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-12-08T15:08:16.422Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.hotel.HotelReservationSystemApplication for test class com.hotel.HotelReservationSystemApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.5)
+
+2024-12-08T15:08:16.429Z  WARN 37343 --- [hotel-reservation-system] [    Test worker] ory$DuplicateJsonObjectContextCustomizer : 
+
+Found multiple occurrences of org.json.JSONObject on the class path:
+
+	jar:file:/Users/parthbadve/.gradle/caches/modules-2/files-2.1/org.json/json/20231013/e22e0c040fe16f04ffdb85d851d77b07fc05ea52/json-20231013.jar!/org/json/JSONObject.class
+	jar:file:/Users/parthbadve/.gradle/caches/modules-2/files-2.1/com.vaadin.external.google/android-json/0.0.20131108.vaadin1/fa26d351fe62a6a17f5cda1287c1c6110dec413f/android-json-0.0.20131108.vaadin1.jar!/org/json/JSONObject.class
+
+You may wish to exclude one of them to ensure predictable runtime behavior
+
+2024-12-08T15:08:16.429Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] h.HotelReservationSystemApplicationTests : Starting HotelReservationSystemApplicationTests using Java 23 with PID 37343 (started by parthbadve in /Users/parthbadve/java_projects/Hotel-Reservation-System)
+2024-12-08T15:08:16.430Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] h.HotelReservationSystemApplicationTests : No active profile set, falling back to 1 default profile: "default"
+2024-12-08T15:08:16.511Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-08T15:08:16.517Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 5 ms. Found 5 JPA repository interfaces.
+2024-12-08T15:08:16.546Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-08T15:08:16.547Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-08T15:08:16.550Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-08T15:08:16.550Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Starting...
+2024-12-08T15:08:16.959Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-4 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7a176868
+2024-12-08T15:08:16.960Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Start completed.
+2024-12-08T15:08:17.030Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-08T15:08:17.554Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+Notification services initalised
+2024-12-08T15:08:17.638Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2024-12-08T15:08:17.644Z  WARN 37343 --- [hotel-reservation-system] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-08T15:08:17.696Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2024-12-08T15:08:17.754Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] h.HotelReservationSystemApplicationTests : Started HotelReservationSystemApplicationTests in 1.33 seconds (process running for 10.515)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

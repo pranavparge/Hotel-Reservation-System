@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.hotel.RoomPriceTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-12-08T15:08:20" hostname="Parths-MacBook-Pro-2.local" time="0.422">
+  <properties/>
+  <testcase name="testGetRoomPrice_Success()" classname="com.hotel.RoomPriceTests" time="0.422"/>
+  <system-out><![CDATA[2024-12-08T15:08:19.110Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.hotel.RoomPriceTests]: RoomPriceTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-12-08T15:08:19.111Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.hotel.HotelReservationSystemApplication for test class com.hotel.RoomPriceTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.5)
+
+2024-12-08T15:08:19.116Z  WARN 37343 --- [hotel-reservation-system] [    Test worker] ory$DuplicateJsonObjectContextCustomizer : 
+
+Found multiple occurrences of org.json.JSONObject on the class path:
+
+	jar:file:/Users/parthbadve/.gradle/caches/modules-2/files-2.1/org.json/json/20231013/e22e0c040fe16f04ffdb85d851d77b07fc05ea52/json-20231013.jar!/org/json/JSONObject.class
+	jar:file:/Users/parthbadve/.gradle/caches/modules-2/files-2.1/com.vaadin.external.google/android-json/0.0.20131108.vaadin1/fa26d351fe62a6a17f5cda1287c1c6110dec413f/android-json-0.0.20131108.vaadin1.jar!/org/json/JSONObject.class
+
+You may wish to exclude one of them to ensure predictable runtime behavior
+
+2024-12-08T15:08:19.117Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] com.hotel.RoomPriceTests                 : Starting RoomPriceTests using Java 23 with PID 37343 (started by parthbadve in /Users/parthbadve/java_projects/Hotel-Reservation-System)
+2024-12-08T15:08:19.118Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] com.hotel.RoomPriceTests                 : No active profile set, falling back to 1 default profile: "default"
+2024-12-08T15:08:19.175Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-08T15:08:19.180Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 4 ms. Found 5 JPA repository interfaces.
+2024-12-08T15:08:19.224Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-08T15:08:19.225Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-08T15:08:19.227Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-08T15:08:19.227Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Starting...
+2024-12-08T15:08:19.691Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-6 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7f8ac326
+2024-12-08T15:08:19.692Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Start completed.
+2024-12-08T15:08:19.811Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-08T15:08:20.364Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+Notification services initalised
+2024-12-08T15:08:20.456Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2024-12-08T15:08:20.460Z  WARN 37343 --- [hotel-reservation-system] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-08T15:08:20.506Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2024-12-08T15:08:20.563Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2024-12-08T15:08:20.564Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2024-12-08T15:08:20.564Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2024-12-08T15:08:20.569Z  INFO 37343 --- [hotel-reservation-system] [    Test worker] com.hotel.RoomPriceTests                 : Started RoomPriceTests in 1.457 seconds (process running for 13.331)
+Hibernate: 
+    select
+        c1_0.customer_id,
+        c1_0.email,
+        c1_0.name,
+        c1_0.password,
+        c1_0.program_type 
+    from
+        customer c1_0 
+    where
+        c1_0.email=? 
+    limit
+        ?
+Hibernate: 
+    select
+        c1_0.customer_id,
+        c1_0.email,
+        c1_0.name,
+        c1_0.password,
+        c1_0.program_type 
+    from
+        customer c1_0 
+    where
+        c1_0.email=? 
+    limit
+        ?
+Hibernate: 
+    select
+        c1_0.customer_id,
+        c1_0.email,
+        c1_0.name,
+        c1_0.password,
+        c1_0.program_type 
+    from
+        customer c1_0 
+    where
+        c1_0.email=? 
+    limit
+        ?
+Extracted JWT Token: eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQ1VTVE9NRVIiLCJzdWIiOiJjdXN0b21lckBnbWFpbC5jb20iLCJpYXQiOjE3MzM2NzA1MDAsImV4cCI6MTczMzc1NjkwMH0.dUoTM8p1_MSCvqxk7srktKRQw1_oayAKcmRzTm6W38I
+Hibernate: 
+    select
+        c1_0.customer_id,
+        c1_0.email,
+        c1_0.name,
+        c1_0.password,
+        c1_0.program_type 
+    from
+        customer c1_0 
+    where
+        c1_0.email=? 
+    limit
+        ?
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
