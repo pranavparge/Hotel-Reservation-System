@@ -1,9 +1,10 @@
 HELP.md
 .gradle
-build/
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+
+# Exclude the entire build directory except the JARs
+/build/
+!build/libs/*.jar
 
 ### STS ###
 .apt_generated
