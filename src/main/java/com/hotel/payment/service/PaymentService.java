@@ -8,11 +8,11 @@ import com.hotel.dto.response.PaymentResponse;
 import com.hotel.payment.entity.PaymentStrategy;
 import com.hotel.payment.entity.Payment;
 import com.hotel.payment.entity.PaymentNotifier;
-import com.hotel.payment.entity.PaymentStrategy;
 import com.hotel.repository.PaymentRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -32,15 +32,12 @@ public class PaymentService implements IPaymentService {
     synchronized public PaymentResponse processPayment(PaymentRequest request) {
         
         String validString = request.validate();
-        if(validString != ""){
+        if(!Objects.equals(validString, "")){
             throw new IllegalArgumentException(validString);
         }
         String validDetails = request.getPaymentDetails().validate();
-        if(validDetails != ""){
+        if(!Objects.equals(validDetails, "")){
             throw new IllegalArgumentException(validDetails);
-        }
-        if(!paymentRepository.findPaymentByBookingId(request.getBookingId()).isEmpty()){
-            throw new IllegalStateException("Payment has been processed");
         }
         final Payment paymentModel = paymentStrategy.createPayment(request.getAmount(), request.bookingId(), request.getEmail(), request.getPaymentDetails());
         paymentModel.processPayment();
