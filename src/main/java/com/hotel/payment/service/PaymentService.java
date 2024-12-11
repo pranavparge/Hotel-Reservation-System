@@ -8,17 +8,24 @@ import com.hotel.dto.response.PaymentResponse;
 import com.hotel.payment.entity.PaymentStrategy;
 import com.hotel.payment.entity.Payment;
 import com.hotel.payment.entity.PaymentNotifier;
+import com.hotel.repository.CustomerRepository;
 import com.hotel.repository.PaymentRepository;
+import com.hotel.user.entity.Customer;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Transactional
 public class PaymentService implements IPaymentService {
     @Autowired
     private PaymentRepository paymentRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @Autowired
     private PaymentNotifier paymentNotifier;
@@ -39,7 +46,7 @@ public class PaymentService implements IPaymentService {
         if(!Objects.equals(validDetails, "")){
             throw new IllegalArgumentException(validDetails);
         }
-        final Payment paymentModel = paymentStrategy.createPayment(request.getAmount(), request.bookingId(), request.getEmail(), request.getPaymentDetails());
+        final Payment paymentModel = paymentStrategy.createPayment(request.getAmount(), request.getbookingId(), request.getCustomerEmail(), request.getPaymentDetails());
         paymentModel.processPayment();
         paymentRepository.save(paymentModel);
         return paymentModel.notifyPayment(paymentNotifier);
@@ -48,16 +55,25 @@ public class PaymentService implements IPaymentService {
      /// Making them thread safe to avoid any unecessary complications while making the payments.
     /// Avoids making the dubious refunds thereby following ACID compliant.
     @Override
-    synchronized public PaymentResponse refundPayment(String id) {
+    synchronized public PaymentResponse refundPayment(String bookingId, String customerId) {
     
-        if(id == ""){
+        if(bookingId == ""){
             throw new IllegalArgumentException("Booking id not provided");
         }
-        List<Payment> modelList = paymentRepository.findPaymentByBookingId(id);
+        if(customerId == ""){
+            throw new IllegalArgumentException("Customer id not provided");
+        }
+        List<Payment> modelList = paymentRepository.findPaymentByBookingId(bookingId);
+        Optional<Customer> customer = customerRepository.findById(Long.parseLong(customerId));
+
         if(modelList.isEmpty()){
             throw new IllegalStateException("No payment record found to process the refund");
         }
+        if(customer.isEmpty()){
+            throw new IllegalStateException("No valid customer found!");
+        }
         Payment model = modelList.get(0);
+        model.setCustomerEmail(customer.get().getEmail());
         model.refundPayment();
         
         paymentRepository.delete(model);

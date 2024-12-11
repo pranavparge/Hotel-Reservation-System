@@ -1,13 +1,25 @@
 package com.hotel.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RefundPaymentRequest {
-    @NotNull(message = "Name is required")
-    private String name;
+    @NotBlank(message = "CustomerId is required")
+    private String customerId;
 
-    @NotNull(message = "BookingID is required")
+    @NotBlank(message = "BookingID is required")
     private String bookingId;
+
+    public String getBookingID(){
+        return this.bookingId;
+    }
+    public String getCustomerID(){
+        return this.customerId;
+    }
 }

@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hotel.dto.request.PaymentRequest;
+import com.hotel.dto.request.RefundPaymentRequest;
 import com.hotel.dto.response.PaymentResponse;
+import com.hotel.payment.entity.PaymentDetailsFactory;
 import com.hotel.payment.service.IPaymentService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 
@@ -22,15 +25,18 @@ import lombok.RequiredArgsConstructor;
 public class PaymentController {
     @Autowired
     private IPaymentService IPaymentService;
+
+    @Autowired
+    private PaymentDetailsFactory paymentDetailsFactory;
     /// Helps apply application level locking to prevent duplicate requests happening
     /// Check if the booking is already under process and throws an error if so
     private final ConcurrentHashMap<String, Boolean> processingBookings = new ConcurrentHashMap<>();
     
     @PostMapping("/customer/pay")
     public ResponseEntity<?> processPayment(@RequestBody Map<String,Object> data) {
-        PaymentRequest request = new PaymentRequest(data);
+        PaymentRequest request = new PaymentRequest(paymentDetailsFactory, data);
         try {
-            if (processingBookings.putIfAbsent(request.bookingId(), true) != null) {
+            if (processingBookings.putIfAbsent(request.getbookingId(), true) != null) {
                 throw new IllegalStateException("Payment is already under process");
             }
             PaymentResponse response = IPaymentService.processPayment(request);
@@ -59,19 +65,20 @@ public class PaymentController {
         }
         finally{
             // remove the bookingID
-            processingBookings.remove(request.bookingId());
+            processingBookings.remove(request.getbookingId());
         }
     }
 
     @PostMapping("/customer/refund")
-    public ResponseEntity<?> refundPayment(@RequestBody Map<String, Object> data) {
-        String bookingid = data.get("id").toString();
+    public ResponseEntity<?> refundPayment(@Valid @RequestBody RefundPaymentRequest refundPaymentRequest) {
+        // RefundPaymentRequest refundPaymentRequest = new RefundPaymentRequest()
+        System.out.println("Customer Id" + refundPaymentRequest.getCustomerID());
+        System.out.println("Booking Id" + refundPaymentRequest.getBookingID());
         try {
-           
-            if (processingBookings.putIfAbsent(bookingid, true) != null) {
-                throw new IllegalStateException("Payment is already under process");
-            }
-            PaymentResponse response = IPaymentService.refundPayment(bookingid);
+//            if (processingBookings.putIfAbsent(refundPaymentRequest.getBookingID(), true) != null) {
+//                throw new IllegalStateException("Payment is already under process");
+//            }
+            PaymentResponse response = IPaymentService.refundPayment(refundPaymentRequest.getBookingID(), refundPaymentRequest.getCustomerID());
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         catch(IllegalArgumentException exception){
@@ -82,7 +89,7 @@ public class PaymentController {
             );
         } 
         catch(IllegalStateException exception){
-            PaymentResponse response = new PaymentResponse("Refund is already processing!", "Payment failure!", false);
+            PaymentResponse response = new PaymentResponse(exception.getMessage(), "Payment failure!", false);
             return new ResponseEntity<>(
                     response,
                     HttpStatus.INTERNAL_SERVER_ERROR
@@ -97,7 +104,7 @@ public class PaymentController {
         }
         finally{
             // remove the bookingID
-            processingBookings.remove(bookingid);
+            processingBookings.remove(refundPaymentRequest.getBookingID());
         }
     }
 }

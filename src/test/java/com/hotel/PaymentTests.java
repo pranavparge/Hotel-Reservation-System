@@ -149,7 +149,7 @@ public class PaymentTests {
 
         PaymentResponse response = new PaymentResponse("Refund processed successfully via Card", "Refund processed successfully", true);
 
-        Mockito.when(paymentService.refundPayment(any(String.class))).thenReturn(response);
+        Mockito.when(paymentService.refundPayment(any(String.class), any(String.class))).thenReturn(response);
 
         String cardRefundRequest = "{\"id\":\"2123\"}"
 ;
@@ -174,7 +174,7 @@ public class PaymentTests {
 
         PaymentResponse response = new PaymentResponse("Refund processed successfully via Paypal", "Refund processed successfully", true);
 
-        Mockito.when(paymentService.refundPayment(any(String.class))).thenReturn(response);
+        Mockito.when(paymentService.refundPayment(any(String.class), any(String.class))).thenReturn(response);
 
         String paypalRefundRequest = "{\"id\":\"2124\"}"
 ;

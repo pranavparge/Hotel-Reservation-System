@@ -9,5 +9,5 @@ public interface IPaymentService {
     /// We make the check for all necessary validations for going forward with the transaction.
     PaymentResponse processPayment(PaymentRequest request);
     /// Enables the processing of refunds based on the requests incoming.
-    PaymentResponse refundPayment(String id);
+    PaymentResponse refundPayment(String bookingId, String customerId);
 }
