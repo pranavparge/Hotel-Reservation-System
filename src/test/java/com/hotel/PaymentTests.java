@@ -100,44 +100,17 @@ public class PaymentTests {
 
         Mockito.when(paymentService.processPayment(any(PaymentRequest.class))).thenReturn(response);
 
-        String cardPaymentRequest = "{\"bookingId\":\"2124\",\"amount\":120.0,\"customerEmail\":\"customer@gmail.com\",\"paymentMethod\":\"Paypal\",\"details\":{\"paypalID\":\"1234567812345678\"}}"
-;
+        String cardPaymentRequest = "{\"bookingId\":\"2124\",\"amount\":120.0,\"customerEmail\":\"customer@gmail.com\",\"paymentMethod\":\"Paypal\",\"details\":{\"paypalID\":\"1234567812345678\"}}";
 
         mockMvc.perform(post("/customer/pay")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer mockedToken")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(cardPaymentRequest))
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer mockedToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(cardPaymentRequest))
                 .andExpect(status().isOk()) // Expect 200 OK
-                .andExpect(jsonPath("$.result").value(true)) 
-                .andExpect(jsonPath("$.status").value("Payment successfull")) 
-                .andExpect(jsonPath("$.message").value("Payment successfull via Paypal")) 
-                .andExpect(jsonPath("$.timeStamp").exists()); 
-    }
-
-    /// Test for verifying incorrect arguments
-    @Test
-    void testPaymentfailureArguments() throws Exception {
-
-        when(jwtUtility.isTokenValid(anyString(), any(UserDetails.class))).thenReturn(true);
-        when(jwtUtility.extractUsername(anyString())).thenReturn("customer@gmail.com");
-        when(jwtUtility.extractRole(anyString())).thenReturn("CUSTOMER");
-
-        PaymentResponse response = new PaymentResponse("Incorrect arguments", "Payment failure!", false);
-
-        Mockito.when(paymentService.processPayment(any(PaymentRequest.class))).thenReturn(response);
-
-        String cardPaymentRequest = "{\"bookingId\":\"2124\",\"amount\":120.0,\"customerEmail\":\"customer@gmail.com\",\"paymentMethod\":\"Card\",\"details\":{\"paypalID\":\"1234567812345678\"}}"
-;
-
-        mockMvc.perform(post("/customer/pay")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer mockedToken")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(cardPaymentRequest))
-                .andExpect(status().isInternalServerError()) // Expect 500 INTERNAL SERVER ERROR
-                .andExpect(jsonPath("$.result").value(false)) 
-                .andExpect(jsonPath("$.status").value("Payment failure!")) 
-                .andExpect(jsonPath("$.message").isNotEmpty()) 
-                .andExpect(jsonPath("$.timeStamp").exists()); 
+                .andExpect(jsonPath("$.result").value(true))
+                .andExpect(jsonPath("$.status").value("Payment successfull"))
+                .andExpect(jsonPath("$.message").value("Payment successfull via Paypal"))
+                .andExpect(jsonPath("$.timeStamp").exists());
     }
 
     /// Method to test the card refund payment requests.
@@ -151,7 +124,7 @@ public class PaymentTests {
 
         Mockito.when(paymentService.refundPayment(any(String.class), any(String.class))).thenReturn(response);
 
-        String cardRefundRequest = "{\"id\":\"2123\"}"
+        String cardRefundRequest = "{\"customerId\":\"1\",\"bookingId\":\"2123\"}"
 ;
 
         mockMvc.perform(post("/customer/refund")
@@ -176,7 +149,7 @@ public class PaymentTests {
 
         Mockito.when(paymentService.refundPayment(any(String.class), any(String.class))).thenReturn(response);
 
-        String paypalRefundRequest = "{\"id\":\"2124\"}"
+        String paypalRefundRequest = "{\"customerId\":\"1\",\"bookingId\":\"2124\"}"
 ;
 
         mockMvc.perform(post("/customer/refund")

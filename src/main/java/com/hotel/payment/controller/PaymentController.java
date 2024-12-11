@@ -43,14 +43,14 @@ public class PaymentController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         catch(IllegalArgumentException exception){
-            PaymentResponse response = new PaymentResponse("Invalid payment request!", "Payment failure!", false);
+            PaymentResponse response = new PaymentResponse(exception.getMessage(), "Payment failure!", false);
             return new ResponseEntity<>(
                     response,
                     HttpStatus.BAD_REQUEST
             );
         } 
         catch(IllegalStateException exception){
-            PaymentResponse response = new PaymentResponse("Payment is already processing!", "Payment failure!", false);
+            PaymentResponse response = new PaymentResponse(exception.getMessage(), "Payment failure!", false);
             return new ResponseEntity<>(
                     response,
                     HttpStatus.INTERNAL_SERVER_ERROR
@@ -72,17 +72,15 @@ public class PaymentController {
     @PostMapping("/customer/refund")
     public ResponseEntity<?> refundPayment(@Valid @RequestBody RefundPaymentRequest refundPaymentRequest) {
         // RefundPaymentRequest refundPaymentRequest = new RefundPaymentRequest()
-        System.out.println("Customer Id" + refundPaymentRequest.getCustomerID());
-        System.out.println("Booking Id" + refundPaymentRequest.getBookingID());
         try {
-//            if (processingBookings.putIfAbsent(refundPaymentRequest.getBookingID(), true) != null) {
-//                throw new IllegalStateException("Payment is already under process");
-//            }
+           if (processingBookings.putIfAbsent(refundPaymentRequest.getBookingID(), true) != null) {
+               throw new IllegalStateException("Payment is already under process");
+           }
             PaymentResponse response = IPaymentService.refundPayment(refundPaymentRequest.getBookingID(), refundPaymentRequest.getCustomerID());
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         catch(IllegalArgumentException exception){
-            PaymentResponse response = new PaymentResponse("Invalid payment refund request!", "Payment refund failure!", false);
+            PaymentResponse response = new PaymentResponse(exception.getMessage(), "Payment refund failure!", false);
             return new ResponseEntity<>(
                     response,
                     HttpStatus.BAD_REQUEST

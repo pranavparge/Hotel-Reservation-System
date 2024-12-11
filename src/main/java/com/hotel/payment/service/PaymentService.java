@@ -46,7 +46,11 @@ public class PaymentService implements IPaymentService {
         if(!Objects.equals(validDetails, "")){
             throw new IllegalArgumentException(validDetails);
         }
-        final Payment paymentModel = paymentStrategy.createPayment(request.getAmount(), request.getbookingId(), request.getCustomerEmail(), request.getPaymentDetails());
+        List<Payment> payment = paymentRepository.findPaymentByBookingId(request.getbookingId());
+        if(!payment.isEmpty()){
+            throw new IllegalStateException("Payment already processed");
+        }
+        final Payment paymentModel = paymentStrategy.createPayment(request.getAmount(), request.getbookingId(), request.getEmail(), request.getPaymentDetails());
         paymentModel.processPayment();
         paymentRepository.save(paymentModel);
         return paymentModel.notifyPayment(paymentNotifier);
